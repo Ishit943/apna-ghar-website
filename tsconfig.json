@@ -13,6 +13,7 @@
     "verbatimModuleSyntax": false,
     "noEmit": true,
     "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
 
     /* Linting */
     "skipLibCheck": true,

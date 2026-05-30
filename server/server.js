@@ -42,9 +42,14 @@ app.get("/", (req, res) => {
 // Connect database
 connectDB();
 
-// Start server
-app.listen(PORT, () => {
-  console.log(
-    `Server running on port ${PORT}`
-  );
-});
+// For local development (not in serverless), start the server
+if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(
+      `Server running on port ${PORT}`
+    );
+  });
+}
+
+// Export app for Vercel serverless function
+export default app;

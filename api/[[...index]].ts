@@ -1,8 +1,10 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
+import type { Express } from 'express';
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
-    const { default: handler } = await import('../dist/server/server.js');
+    // @ts-expect-error - dynamic import of compiled server module at runtime
+    const handler = (await import('../dist/server/server.js')).default as Express;
     return handler(req, res);
   } catch (error) {
     console.error('Server error:', error);
