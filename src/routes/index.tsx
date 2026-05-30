@@ -367,7 +367,7 @@ function ContactSection() {
   try {
     // Send form data to backend
     const response = await fetch(
-      "http://localhost:5000/api/contact",
+      "https://apna-ghar-backend.onrender.com/api/contact",
       {
         method: "POST",
         headers: {
