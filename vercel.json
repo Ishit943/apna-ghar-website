@@ -1,6 +1,7 @@
 {
   "buildCommand": "npm run build",
-  "framework": "vite",
+  "outputDirectory": "dist/client",
+  "publicPath": "/",
   "rewrites": [
     {
       "source": "/api/(.*)",
