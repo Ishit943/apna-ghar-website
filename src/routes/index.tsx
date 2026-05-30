@@ -365,9 +365,13 @@ function ContactSection() {
   }
 
   try {
+    // Get API URL from environment variable
+    const apiUrl = import.meta.env.VITE_API_URL || '/api';
+    const contactEndpoint = `${apiUrl}/contact`;
+
     // Send form data to backend
     const response = await fetch(
-      "https://apna-ghar-backend.onrender.com/api/contact",
+      contactEndpoint,
       {
         method: "POST",
         headers: {
@@ -396,12 +400,12 @@ function ContactSection() {
       });
     } else {
       toast.error(
-        "Something went wrong. Please try again."
+        data.message || "Something went wrong. Please try again."
       );
     }
   } catch (error) {
     console.error(error);
-    toast.error("Backend connection failed.");
+    toast.error("Backend connection failed. Please try again later.");
   }
 };
   const handleClear = () => setForm({ name: "", mobile: "", query: "Buy Property" });
