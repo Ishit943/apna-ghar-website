@@ -5,14 +5,27 @@ export const submitContactForm = async (
   res
 ) => {
   try {
-    console.log("BODY:", req.body);
-
+    // Extract data
     const {
       name,
       mobileNumber,
       queryAbout,
     } = req.body;
 
+    // Validation
+    if (
+      !name ||
+      !mobileNumber ||
+      !queryAbout
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "All fields are required",
+      });
+    }
+
+    // Save to database
     const newContact =
       await Contact.create({
         name,
@@ -25,14 +38,14 @@ export const submitContactForm = async (
       newContact
     );
 
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message:
         "Form submitted successfully",
     });
   } catch (error) {
     console.error(
-      "FULL ERROR:",
+      "Contact form error:",
       error
     );
 
@@ -40,7 +53,6 @@ export const submitContactForm = async (
       success: false,
       message:
         "Server error while saving form",
-      error: error.message,
     });
   }
 };
