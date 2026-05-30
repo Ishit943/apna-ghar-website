@@ -30,10 +30,5 @@
         }
       ]
     }
-  ],
-  "env": [
-    "MONGODB_URI",
-    "NODE_ENV",
-    "VITE_API_URL"
   ]
 }
