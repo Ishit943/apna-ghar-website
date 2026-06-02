@@ -10,20 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PropertiesRouteImport } from './routes/properties'
-import { Route as ListPropertyRouteImport } from './routes/list-property'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as EmiCalculatorRouteImport } from './routes/emi-calculator'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PropertyIdRouteImport } from './routes/property/$id'
+import { Route as AdminTeamDashboardRouteImport } from './routes/admin/team-dashboard'
+import { Route as AdminLoginRouteImport } from './routes/admin/login'
+import { Route as AdminDashboardRouteImport } from './routes/admin/dashboard'
 
 const PropertiesRoute = PropertiesRouteImport.update({
   id: '/properties',
   path: '/properties',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ListPropertyRoute = ListPropertyRouteImport.update({
-  id: '/list-property',
-  path: '/list-property',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FaqRoute = FaqRouteImport.update({
@@ -46,21 +43,40 @@ const PropertyIdRoute = PropertyIdRouteImport.update({
   path: '/property/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTeamDashboardRoute = AdminTeamDashboardRouteImport.update({
+  id: '/admin/team-dashboard',
+  path: '/admin/team-dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/admin/login',
+  path: '/admin/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminDashboardRoute = AdminDashboardRouteImport.update({
+  id: '/admin/dashboard',
+  path: '/admin/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/emi-calculator': typeof EmiCalculatorRoute
   '/faq': typeof FaqRoute
-  '/list-property': typeof ListPropertyRoute
   '/properties': typeof PropertiesRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/team-dashboard': typeof AdminTeamDashboardRoute
   '/property/$id': typeof PropertyIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/emi-calculator': typeof EmiCalculatorRoute
   '/faq': typeof FaqRoute
-  '/list-property': typeof ListPropertyRoute
   '/properties': typeof PropertiesRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/team-dashboard': typeof AdminTeamDashboardRoute
   '/property/$id': typeof PropertyIdRoute
 }
 export interface FileRoutesById {
@@ -68,8 +84,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/emi-calculator': typeof EmiCalculatorRoute
   '/faq': typeof FaqRoute
-  '/list-property': typeof ListPropertyRoute
   '/properties': typeof PropertiesRoute
+  '/admin/dashboard': typeof AdminDashboardRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/team-dashboard': typeof AdminTeamDashboardRoute
   '/property/$id': typeof PropertyIdRoute
 }
 export interface FileRouteTypes {
@@ -78,24 +96,30 @@ export interface FileRouteTypes {
     | '/'
     | '/emi-calculator'
     | '/faq'
-    | '/list-property'
     | '/properties'
+    | '/admin/dashboard'
+    | '/admin/login'
+    | '/admin/team-dashboard'
     | '/property/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/emi-calculator'
     | '/faq'
-    | '/list-property'
     | '/properties'
+    | '/admin/dashboard'
+    | '/admin/login'
+    | '/admin/team-dashboard'
     | '/property/$id'
   id:
     | '__root__'
     | '/'
     | '/emi-calculator'
     | '/faq'
-    | '/list-property'
     | '/properties'
+    | '/admin/dashboard'
+    | '/admin/login'
+    | '/admin/team-dashboard'
     | '/property/$id'
   fileRoutesById: FileRoutesById
 }
@@ -103,8 +127,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   EmiCalculatorRoute: typeof EmiCalculatorRoute
   FaqRoute: typeof FaqRoute
-  ListPropertyRoute: typeof ListPropertyRoute
   PropertiesRoute: typeof PropertiesRoute
+  AdminDashboardRoute: typeof AdminDashboardRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminTeamDashboardRoute: typeof AdminTeamDashboardRoute
   PropertyIdRoute: typeof PropertyIdRoute
 }
 
@@ -115,13 +141,6 @@ declare module '@tanstack/react-router' {
       path: '/properties'
       fullPath: '/properties'
       preLoaderRoute: typeof PropertiesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/list-property': {
-      id: '/list-property'
-      path: '/list-property'
-      fullPath: '/list-property'
-      preLoaderRoute: typeof ListPropertyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/faq': {
@@ -152,6 +171,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PropertyIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/team-dashboard': {
+      id: '/admin/team-dashboard'
+      path: '/admin/team-dashboard'
+      fullPath: '/admin/team-dashboard'
+      preLoaderRoute: typeof AdminTeamDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/admin/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/dashboard': {
+      id: '/admin/dashboard'
+      path: '/admin/dashboard'
+      fullPath: '/admin/dashboard'
+      preLoaderRoute: typeof AdminDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -159,8 +199,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   EmiCalculatorRoute: EmiCalculatorRoute,
   FaqRoute: FaqRoute,
-  ListPropertyRoute: ListPropertyRoute,
   PropertiesRoute: PropertiesRoute,
+  AdminDashboardRoute: AdminDashboardRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminTeamDashboardRoute: AdminTeamDashboardRoute,
   PropertyIdRoute: PropertyIdRoute,
 }
 export const routeTree = rootRouteImport

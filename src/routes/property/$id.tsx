@@ -595,7 +595,7 @@ function PropertyDetailPage() {
                   </a>
                 </li>
                 <li>
-                  <a href="/list-property" className="hover:text-accent transition-colors">
+                  <a href="/properties" className="hover:text-accent transition-colors">
                     List Property
                   </a>
                 </li>

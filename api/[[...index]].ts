@@ -1,17 +1,22 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
-import type { Express } from 'express';
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-export default async (req: VercelRequest, res: VercelResponse) => {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    // @ts-expect-error - dynamic import of compiled server module at runtime
-    const handler = (await import('../dist/server/server.js')).default as Express;
-    return handler(req, res);
+    
+    const server = await import("../dist/server/server.js");
+
+    if (typeof server.default === "function") {
+      return server.default(req, res);
+    }
+
+    throw new Error("Server handler not found");
   } catch (error) {
-    console.error('Server error:', error);
+    console.error("Server error:", error);
+
     return res.status(500).json({
       success: false,
-      message: 'Server error',
-      error: process.env.NODE_ENV === 'development' ? error : undefined,
+      message: "Server error",
     });
   }
-};
+}
+

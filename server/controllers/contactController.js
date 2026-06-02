@@ -5,6 +5,8 @@ export const submitContactForm = async (
   res
 ) => {
   try {
+    console.log("📨 Contact form request received:", req.body);
+    
     // Extract data
     const {
       name,

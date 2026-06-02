@@ -187,7 +187,7 @@ Or use automatic deployments:
 ### Frontend Files to Know
 
 - `src/routes/index.tsx` - Homepage with contact form
-- `src/routes/list-property.tsx` - Property listing form
+- `src/routes/properties.tsx` - Properties showcase and listing form (merged)
 - `src/lib/api/client.ts` - API helper functions
 - `src/lib/config.server.ts` - Server-side configuration
 

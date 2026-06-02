@@ -66,7 +66,6 @@ const NAV = [
   { label: "Properties", href: "/properties" },
   { label: "FAQ", href: "#faq" },
   { label: "EMI Calculator", href: "/emi-calculator" },
-  { label: "List Property", href: "/list-property" },
   { label: "Brokerage", href: "#brokerage" },
   { label: "Contact us", href: "#contact" },
 ];
@@ -91,6 +90,17 @@ function Logo() {
 
 function Header() {
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle search functionality here
+    console.log("Searching for:", searchQuery);
+    setSearchQuery("");
+    setSearchOpen(false);
+  };
+
   return (
     <header className="sticky top-0 z-50 backdrop-blur bg-background/85 border-b border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -106,12 +116,37 @@ function Header() {
                 {n.label}
               </a>
             ))}
-            <button
-              aria-label="Search"
-              className="text-foreground/70 hover:text-accent transition-colors duration-200"
-            >
-              <Search className="h-4 w-4" />
-            </button>
+            {searchOpen ? (
+              <form onSubmit={handleSearch} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Search properties..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  className="px-3 py-2 rounded-md bg-accent/10 border border-accent/30 text-foreground placeholder:text-foreground/50 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchOpen(false);
+                    setSearchQuery("");
+                  }}
+                  className="text-foreground/70 hover:text-accent transition-colors duration-200"
+                  aria-label="Close search"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </form>
+            ) : (
+              <button
+                onClick={() => setSearchOpen(true)}
+                aria-label="Search"
+                className="text-foreground/70 hover:text-accent transition-colors duration-200"
+              >
+                <Search className="h-4 w-4" />
+              </button>
+            )}
           </nav>
           <button
             className="lg:hidden text-foreground p-2 hover:text-accent transition-colors duration-200"
@@ -642,10 +677,10 @@ function PremiumCTA() {
               Contact Us
             </Button>
           </a>
-          <a href="/list-property" className="flex-1 sm:flex-initial">
+          <a href="/properties" className="flex-1 sm:flex-initial">
             <Button size="lg" variant="outline" className="w-full sm:w-auto border-gold/50 hover:bg-gold/10">
               <Megaphone className="h-5 w-5 mr-2" />
-              List Your Property
+              Browse Properties
             </Button>
           </a>
         </div>

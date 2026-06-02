@@ -4,7 +4,6 @@ import { ArrowLeft, TrendingUp, DollarSign, Calendar, Percent, Home } from "luci
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
 
 export const Route = createFileRoute("/emi-calculator")({
   head: () => ({
@@ -101,8 +100,9 @@ function EMICalculatorPage() {
   const [downPayment, setDownPayment] = useState(600000);
   const [interestRate, setInterestRate] = useState(8.5);
   const [loanTenure, setLoanTenure] = useState(20);
+  const [customLoanAmount, setCustomLoanAmount] = useState<number | null>(null);
 
-  const loanAmount = Math.max(0, propertyValue - downPayment);
+  const loanAmount = customLoanAmount !== null ? customLoanAmount : Math.max(0, propertyValue - downPayment);
   const { emi, totalInterest, totalPayable } = calculateEMI(
     loanAmount,
     interestRate,
@@ -117,6 +117,7 @@ function EMICalculatorPage() {
     setDownPayment(600000);
     setInterestRate(8.5);
     setLoanTenure(20);
+    setCustomLoanAmount(null);
   };
 
   return (
@@ -160,118 +161,128 @@ function EMICalculatorPage() {
                   <div className="space-y-6 sm:space-y-8">
                     {/* Property Value */}
                     <div>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-3">
-                        <Label className="flex items-center gap-2 font-medium">
-                          <Home className="h-4 w-4 text-accent shrink-0" />
-                          <span>Property Value</span>
-                        </Label>
-                        <span className="font-serif text-lg font-bold text-primary">
-                          {formatCurrency(propertyValue)}
-                        </span>
-                      </div>
-                      <Slider
-                        value={[propertyValue]}
-                        onValueChange={(value) => {
-                          const newValue = value[0];
+                      <Label className="flex items-center gap-2 font-medium mb-3">
+                        <Home className="h-4 w-4 text-accent shrink-0" />
+                        <span>Property Value</span>
+                      </Label>
+                      <Input
+                        type="number"
+                        value={propertyValue}
+                        onChange={(e) => {
+                          const newValue = Math.max(100000, Math.min(50000000, Number(e.target.value) || 100000));
                           setPropertyValue(newValue);
                           if (downPayment > newValue) {
                             setDownPayment(Math.floor(newValue * 0.2));
                           }
                         }}
-                        min={500000}
+                        min={100000}
                         max={50000000}
                         step={100000}
-                        className="mb-2"
+                        className="text-lg font-semibold"
+                        placeholder="Enter property value"
                       />
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>₹50 Lakh</span>
-                        <span>₹5 Crore</span>
-                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">Range: ₹1 Lakh - ₹5 Crore</p>
                     </div>
 
                     {/* Down Payment */}
                     <div>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-3">
-                        <Label className="flex items-center gap-2 font-medium">
-                          <DollarSign className="h-4 w-4 text-accent shrink-0" />
-                          <span>Down Payment ({downPaymentPercent}%)</span>
-                        </Label>
-                        <span className="font-serif text-lg font-bold text-primary">
-                          {formatCurrency(downPayment)}
-                        </span>
-                      </div>
-                      <Slider
-                        value={[downPayment]}
-                        onValueChange={(value) => setDownPayment(value[0])}
+                      <Label className="flex items-center gap-2 font-medium mb-3">
+                        <DollarSign className="h-4 w-4 text-accent shrink-0" />
+                        <span>Down Payment ({downPaymentPercent}%)</span>
+                      </Label>
+                      <Input
+                        type="number"
+                        value={downPayment}
+                        onChange={(e) => {
+                          const newValue = Math.max(0, Math.min(propertyValue, Number(e.target.value) || 0));
+                          setDownPayment(newValue);
+                        }}
                         min={0}
                         max={propertyValue}
                         step={100000}
-                        className="mb-2"
+                        className="text-lg font-semibold"
+                        placeholder="Enter down payment amount"
                       />
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>₹0</span>
-                        <span>{formatCurrency(propertyValue)}</span>
-                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">Max: {formatCurrency(propertyValue)}</p>
                     </div>
 
-                    {/* Loan Amount (Display) */}
-                    <div className="bg-accent/5 border border-accent/20 rounded-lg p-4">
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
-                        <span className="text-sm font-medium text-foreground">Loan Amount</span>
-                        <span className="font-serif text-xl sm:text-2xl font-bold text-accent">
-                          {formatCurrency(loanAmount)}
-                        </span>
-                      </div>
+                    {/* Loan Amount */}
+                    <div>
+                      <Label className="flex items-center gap-2 font-medium mb-3">
+                        <DollarSign className="h-4 w-4 text-accent shrink-0" />
+                        <span>Loan Amount</span>
+                      </Label>
+                      <Input
+                        type="number"
+                        value={customLoanAmount !== null ? customLoanAmount : loanAmount}
+                        onChange={(e) => {
+                          const newValue = Number(e.target.value) || null;
+                          setCustomLoanAmount(newValue);
+                        }}
+                        min={0}
+                        max={50000000}
+                        step={100000}
+                        className="text-lg font-semibold"
+                        placeholder="Leave empty to auto-calculate"
+                      />
+                      <p className="text-xs text-muted-foreground mt-2">
+                        {customLoanAmount !== null ? "Custom loan amount set" : `Auto-calculated: ${formatCurrency(loanAmount)}`}
+                      </p>
+                      {customLoanAmount !== null && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setCustomLoanAmount(null)}
+                          className="mt-2 text-xs h-auto p-0"
+                        >
+                          Use calculated amount
+                        </Button>
+                      )}
                     </div>
 
                     {/* Interest Rate */}
                     <div>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-3">
-                        <Label className="flex items-center gap-2 font-medium">
-                          <Percent className="h-4 w-4 text-accent shrink-0" />
-                          <span>Interest Rate (p.a.)</span>
-                        </Label>
-                        <span className="font-serif text-lg font-bold text-primary">
-                          {interestRate.toFixed(2)}%
-                        </span>
-                      </div>
-                      <Slider
-                        value={[interestRate]}
-                        onValueChange={(value) => setInterestRate(value[0])}
+                      <Label className="flex items-center gap-2 font-medium mb-3">
+                        <Percent className="h-4 w-4 text-accent shrink-0" />
+                        <span>Interest Rate (p.a.)</span>
+                      </Label>
+                      <Input
+                        type="number"
+                        value={interestRate}
+                        onChange={(e) => {
+                          const newValue = Math.max(3, Math.min(15, Number(e.target.value) || 3));
+                          setInterestRate(newValue);
+                        }}
                         min={3}
                         max={15}
                         step={0.1}
-                        className="mb-2"
+                        className="text-lg font-semibold"
+                        placeholder="Enter interest rate"
                       />
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>3%</span>
-                        <span>15%</span>
-                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">Range: 3% - 15%</p>
                     </div>
 
                     {/* Loan Tenure */}
                     <div>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-3">
-                        <Label className="flex items-center gap-2 font-medium">
-                          <Calendar className="h-4 w-4 text-accent shrink-0" />
-                          <span>Loan Tenure</span>
-                        </Label>
-                        <span className="font-serif text-lg font-bold text-primary">
-                          {loanTenure} Years
-                        </span>
-                      </div>
-                      <Slider
-                        value={[loanTenure]}
-                        onValueChange={(value) => setLoanTenure(value[0])}
+                      <Label className="flex items-center gap-2 font-medium mb-3">
+                        <Calendar className="h-4 w-4 text-accent shrink-0" />
+                        <span>Loan Tenure (Years)</span>
+                      </Label>
+                      <Input
+                        type="number"
+                        value={loanTenure}
+                        onChange={(e) => {
+                          const newValue = Math.max(1, Math.min(30, Number(e.target.value) || 1));
+                          setLoanTenure(newValue);
+                        }}
                         min={1}
                         max={30}
                         step={1}
-                        className="mb-2"
+                        className="text-lg font-semibold"
+                        placeholder="Enter loan tenure in years"
                       />
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>1 Year</span>
-                        <span>30 Years</span>
-                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">Range: 1 - 30 years</p>
                     </div>
 
                     {/* Reset Button */}
@@ -356,7 +367,9 @@ function EMICalculatorPage() {
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Loan Amount</span>
+                      <span className="text-muted-foreground">
+                        Loan Amount {customLoanAmount !== null && <span className="text-accent font-medium">(Custom)</span>}
+                      </span>
                       <span className="font-semibold text-accent">
                         {formatCurrency(loanAmount)}
                       </span>
@@ -437,17 +450,16 @@ function EMICalculatorPage() {
               through every step of your home loan journey.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
-              <Button size="lg" variant="secondary" className="uppercase tracking-widest px-8">
-                Call: +91 70149 30206
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="uppercase tracking-widest px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
-                asChild
-              >
-                <a href="/">Back to Home</a>
-              </Button>
+              <a href="tel:+917014930206" className="inline-block">
+                <Button size="lg" variant="secondary" className="uppercase tracking-widest px-8">
+                  Call: +91 70149 30206
+                </Button>
+              </a>
+              <a href="/" className="inline-block">
+                <Button size="lg" variant="secondary" className="uppercase tracking-widest px-8">
+                  Back to Home
+                </Button>
+              </a>
             </div>
           </div>
         </section>
