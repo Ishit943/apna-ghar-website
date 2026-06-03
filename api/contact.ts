@@ -38,14 +38,40 @@ const contactSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    mobileNumber: {
+    email: {
       type: String,
       required: true,
       trim: true,
+      lowercase: true,
     },
-    queryAbout: {
+    phone: {
       type: String,
       required: true,
+      validate: {
+        validator: function (v) {
+          return /^[6-9]\d{9}$/.test(v);
+        },
+        message:
+          "Phone must be exactly 10 digits starting with 6-9",
+      },
+    },
+    message: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: [1000, "Message cannot exceed 1000 characters"],
+    },
+    propertyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: null,
+    },
+    status: {
+      type: String,
+      enum: ["new", "read", "responded", "archived"],
+      default: "new",
+    },
+    ipAddress: {
+      type: String,
       trim: true,
     },
   },
@@ -80,21 +106,40 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     await connectDB();
 
     // Extract data
-    const { name, mobileNumber, queryAbout } = req.body;
+    const { name, email, phone, message, propertyId } = req.body;
 
     // Validation
-    if (!name || !mobileNumber || !queryAbout) {
+    if (!name || !email || !phone || !message) {
       return res.status(400).json({
         success: false,
         message: 'All fields are required',
       });
     }
 
+    // Validate phone format (10 digits, starts with 6-9)
+    if (!/^[6-9]\d{9}$/.test(phone)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Enter a valid 10-digit Indian mobile number',
+      });
+    }
+
+    // Validate message length
+    if (message.length > 1000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Message cannot exceed 1000 characters',
+      });
+    }
+
     // Save to database
     const newContact = await Contact.create({
       name,
-      mobileNumber,
-      queryAbout,
+      email,
+      phone,
+      message,
+      propertyId: propertyId || null,
+      ipAddress: req.ip,
     });
 
     console.log('New Contact Saved:', newContact);

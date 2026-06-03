@@ -28,6 +28,10 @@ const propertySchema = new mongoose.Schema(
       required: [true, "Please provide a price"],
       min: [0, "Price must be positive"],
     },
+    priceDisplay: {
+      type: String,
+      default: null,
+    },
     description: {
       type: String,
       required: [
@@ -75,6 +79,15 @@ const propertySchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    updatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -87,6 +100,13 @@ propertySchema.index({
   location: "text",
   description: "text",
 });
+// Index for filtering
+propertySchema.index({
+  status: 1,
+  createdAt: -1,
+});
+propertySchema.index({ isFeatured: 1 });
+propertySchema.index({ views: -1 });
 
 const Property = mongoose.model(
   "Property",
