@@ -2,6 +2,7 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist/client",
   "framework": null,
+  "nodeVersion": "22.12.0",
   "rewrites": [
     {
       "source": "/api/(.*)",
