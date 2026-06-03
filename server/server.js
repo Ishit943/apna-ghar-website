@@ -3,9 +3,12 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import cookieParser from "cookie-parser";
 
 import connectDB from "./config/db.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import propertyRoutes from "./routes/propertyRoutes.js";
 
 // Get current directory (ESM)
 const __dirname = path.dirname(
@@ -25,12 +28,15 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:8080', 'http://localhost:8081', 'http://127.0.0.1:8081', 'http://127.0.0.1:5173'],
   credentials: true
 }));
 
 // Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/properties", propertyRoutes);
 app.use("/api/contact", contactRoutes);
 
 // Health route

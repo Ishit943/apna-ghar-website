@@ -1,75 +1,139 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, ReactNode } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-export interface ManagedProperty {
-  id: string;
+export interface Property {
+  _id: string;
   title: string;
   location: string;
-  type: string;
-  price: string;
-  image: string;
+  type: "apartment" | "house" | "villa" | "plot" | "commercial";
+  price: number;
   description: string;
-  sqft: string;
-  beds?: number;
-  baths?: number;
-  addedBy: string;
-  addedDate: string;
+  sqft: number;
+  beds: number;
+  baths: number;
+  images: string[];
+  status: "active" | "sold" | "pending";
+  isFeatured: boolean;
+  views: number;
+  createdBy: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface PropertiesContextType {
-  properties: ManagedProperty[];
-  addProperty: (property: Omit<ManagedProperty, "id" | "addedBy" | "addedDate">, addedBy: string) => void;
-  removeProperty: (id: string, userId: string) => Promise<void>;
-  updateProperty: (id: string, property: Partial<ManagedProperty>, userId: string) => Promise<void>;
+  properties: Property[];
+  isLoading: boolean;
+  error: Error | null;
+  addProperty: (property: Partial<Property>) => Promise<void>;
+  removeProperty: (id: string) => Promise<void>;
+  updateProperty: (id: string, property: Partial<Property>) => Promise<void>;
+  refetch: () => void;
 }
 
 const PropertiesContext = createContext<PropertiesContextType | undefined>(undefined);
 
+const API_BASE = typeof window !== "undefined" ? window.location.origin : "";
+
 export function PropertiesProvider({ children }: { children: ReactNode }) {
-  const [properties, setProperties] = useState<ManagedProperty[]>(() => {
-    const saved = localStorage.getItem("managedProperties");
-    return saved ? JSON.parse(saved) : [];
+  const queryClient = useQueryClient();
+
+  // Fetch properties
+  const {
+    data: properties = [],
+    isLoading,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["properties"],
+    queryFn: async () => {
+      const response = await fetch(`${API_BASE}/api/properties`, {
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to fetch properties");
+      const data = await response.json();
+      return data.properties || [];
+    },
   });
 
-  const addProperty = (property: Omit<ManagedProperty, "id" | "addedBy" | "addedDate">, addedBy: string) => {
-    const newProperty: ManagedProperty = {
-      ...property,
-      id: Date.now().toString(),
-      addedBy,
-      addedDate: new Date().toISOString().split("T")[0],
-    };
+  // Add property mutation
+  const addPropertyMutation = useMutation({
+    mutationFn: async (property: Partial<Property>) => {
+      const response = await fetch(`${API_BASE}/api/properties`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(property),
+      });
+      if (!response.ok) throw new Error("Failed to add property");
+      const data = await response.json();
+      return data.property;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
+    },
+  });
 
-    const updated = [...properties, newProperty];
-    setProperties(updated);
-    localStorage.setItem("managedProperties", JSON.stringify(updated));
+  // Update property mutation
+  const updatePropertyMutation = useMutation({
+    mutationFn: async ({ id, property }: { id: string; property: Partial<Property> }) => {
+      const response = await fetch(`${API_BASE}/api/properties/${id}`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(property),
+      });
+      if (!response.ok) throw new Error("Failed to update property");
+      const data = await response.json();
+      return data.property;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
+    },
+  });
+
+  // Delete property mutation
+  const deletePropertyMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await fetch(`${API_BASE}/api/properties/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to delete property");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
+    },
+  });
+
+  const addProperty = async (property: Partial<Property>) => {
+    await addPropertyMutation.mutateAsync(property);
   };
 
-  const removeProperty = async (id: string, userId: string) => {
-    const property = properties.find(p => p.id === id);
-    if (!property) {
-      throw new Error("Property not found");
-    }
-
-    // In a real app, check if user is admin or property owner
-    const updated = properties.filter(p => p.id !== id);
-    setProperties(updated);
-    localStorage.setItem("managedProperties", JSON.stringify(updated));
+  const updateProperty = async (id: string, property: Partial<Property>) => {
+    await updatePropertyMutation.mutateAsync({ id, property });
   };
 
-  const updateProperty = async (id: string, updates: Partial<ManagedProperty>, userId: string) => {
-    const property = properties.find(p => p.id === id);
-    if (!property) {
-      throw new Error("Property not found");
-    }
-
-    const updated = properties.map(p =>
-      p.id === id ? { ...p, ...updates, addedDate: p.addedDate } : p
-    );
-    setProperties(updated);
-    localStorage.setItem("managedProperties", JSON.stringify(updated));
+  const removeProperty = async (id: string) => {
+    await deletePropertyMutation.mutateAsync(id);
   };
 
   return (
-    <PropertiesContext.Provider value={{ properties, addProperty, removeProperty, updateProperty }}>
+    <PropertiesContext.Provider
+      value={{
+        properties,
+        isLoading,
+        error: error as Error | null,
+        addProperty,
+        removeProperty,
+        updateProperty,
+        refetch,
+      }}
+    >
       {children}
     </PropertiesContext.Provider>
   );
