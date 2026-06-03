@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent, useRef } from "react";
-import { ArrowLeft, MapPin, Maximize2, Bed, Bath, Phone, MessageSquare, Upload, Building2, Home, DollarSign } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowLeft, MapPin, Maximize2, Bed, Bath, Phone, MessageSquare, Upload, Building2, Home, DollarSign, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -102,114 +103,46 @@ const PROPERTY_PURPOSE = ["Sell", "Rent", "Lease"];
 const CITIES = ["Kota", "Jaipur", "Other"];
 
 interface Property {
-  id: number;
+  _id?: string;
+  id?: number;
   title: string;
   location: string;
   type: string;
-  price: string;
-  image: string;
+  price: number;
+  priceDisplay?: string;
+  image?: string;
+  images?: string[];
   description: string;
-  sqft: string;
+  sqft?: number | string;
   beds?: number;
   baths?: number;
+  createdBy?: {
+    _id?: string;
+    name?: string;
+    email?: string;
+  };
+  status?: string;
 }
 
-const PROPERTIES: Property[] = [
-  {
-    id: 1,
-    title: "Premium Corner Plot",
-    location: "Malviya Nagar, Jaipur",
-    type: "Residential Plot",
-    price: "₹28,00,000",
-    image: "https://picsum.photos/600/400?random=101",
-    description: "Spacious corner plot in prime residential zone with all utilities and excellent appreciation potential.",
-    sqft: "2,500 sq.ft",
-  },
-  {
-    id: 2,
-    title: "Luxury Villa with Garden",
-    location: "Vaishali Nagar, Jaipur",
-    type: "Villa",
-    price: "₹75,00,000",
-    image: "https://picsum.photos/600/400?random=102",
-    description: "Stunning 4-bedroom villa featuring private garden, modern interiors, and premium finishes in prestigious community.",
-    sqft: "4,500 sq.ft",
-    beds: 4,
-    baths: 3,
-  },
-  {
-    id: 3,
-    title: "Premium Farmhouse",
-    location: "Jagatpura, Jaipur",
-    type: "Farmhouse",
-    price: "₹45,00,000",
-    image: "https://picsum.photos/600/400?random=103",
-    description: "Sprawling farmhouse with expansive land, organic cultivation space, and weekend retreat potential near city outskirts.",
-    sqft: "3,000 sq.ft + 5 acres",
-  },
-  {
-    id: 4,
-    title: "Luxury Apartment",
-    location: "C-Scheme, Jaipur",
-    type: "Apartment",
-    price: "₹65,00,000",
-    image: "https://picsum.photos/600/400?random=104",
-    description: "Luxurious 3-bedroom apartment in premium residential area with modern kitchen, spacious balcony, and excellent amenities.",
-    sqft: "2,200 sq.ft",
-    beds: 3,
-    baths: 2,
-  },
-  {
-    id: 5,
-    title: "Commercial Office Space",
-    location: "Talwandi, Kota",
-    type: "Commercial",
-    price: "₹2,50,00,000",
-    image: "https://picsum.photos/600/400?random=105",
-    description: "Prime commercial space in business hub with high visibility, modern infrastructure, and strong rental returns.",
-    sqft: "8,000 sq.ft",
-  },
-  {
-    id: 6,
-    title: "Gated Villa Community Plot",
-    location: "Kunhadi, Kota",
-    type: "Residential Plot",
-    price: "₹32,00,000",
-    image: "https://picsum.photos/600/400?random=106",
-    description: "Exclusive gated community plot with landscaped surroundings, 24/7 security, and community amenities.",
-    sqft: "3,200 sq.ft",
-  },
-  {
-    id: 7,
-    title: "Premium Villa with Courtyard",
-    location: "Vigyan Nagar, Jaipur",
-    type: "Villa",
-    price: "₹1,20,00,000",
-    image: "https://picsum.photos/600/400?random=107",
-    description: "Elegant 4-bedroom villa with private courtyard, terraced gardens, and premium modern architecture ideal for discerning investors.",
-    sqft: "3,500 sq.ft",
-    beds: 4,
-    baths: 4,
-  },
-  {
-    id: 8,
-    title: "Heritage Style Bungalow",
-    location: "Bani Park, Jaipur",
-    type: "Villa",
-    price: "₹85,00,000",
-    image: "https://picsum.photos/600/400?random=108",
-    description: "Beautiful 5-bedroom heritage-style bungalow with traditional architecture, spacious grounds, and strong investment potential.",
-    sqft: "5,200 sq.ft",
-    beds: 5,
-    baths: 4,
-  },
-];
+// Properties are now fetched from API via useQuery - removed hardcoded array
 
 function PropertyCard({ property }: { property: Property }) {
   const navigate = useNavigate();
+  
+  // Get the image URL (from either image or images array)
+  const imageUrl = property.image || (property.images && property.images[0]) || "https://picsum.photos/600/400?random=999";
+  
+  // Format price display
+  const priceDisplay = property.priceDisplay || 
+    (typeof property.price === 'number' ? `₹ ${property.price.toLocaleString("en-IN")}` : property.price);
+  
+  // Get property ID for navigation
+  const propertyId = property._id || property.id;
 
   const handleViewDetails = () => {
-    navigate({ to: `/property/${property.id}` });
+    if (propertyId) {
+      navigate({ to: `/property/${propertyId}` });
+    }
   };
 
   const handleContact = () => {
@@ -221,9 +154,12 @@ function PropertyCard({ property }: { property: Property }) {
       {/* Image */}
       <div className="relative overflow-hidden h-48 sm:h-56 bg-muted">
         <img
-          src={property.image}
+          src={imageUrl}
           alt={property.title}
           className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          onError={(e) => {
+            e.currentTarget.src = "https://picsum.photos/600/400?random=999";
+          }}
         />
         <div className="absolute top-3 right-3">
           <span className="bg-accent text-primary px-3 py-1 rounded-full text-xs font-semibold">
@@ -247,10 +183,12 @@ function PropertyCard({ property }: { property: Property }) {
 
         {/* Features */}
         <div className="flex flex-wrap gap-3 text-xs sm:text-sm text-foreground/60 border-t border-border pt-3">
-          <div className="flex items-center gap-1">
-            <Maximize2 className="h-4 w-4 text-gold" />
-            <span>{property.sqft}</span>
-          </div>
+          {property.sqft && (
+            <div className="flex items-center gap-1">
+              <Maximize2 className="h-4 w-4 text-gold" />
+              <span>{property.sqft}</span>
+            </div>
+          )}
           {property.beds && (
             <div className="flex items-center gap-1">
               <Bed className="h-4 w-4 text-gold" />
@@ -268,7 +206,7 @@ function PropertyCard({ property }: { property: Property }) {
         {/* Price */}
         <div className="border-t border-border pt-3">
           <p className="text-xl sm:text-2xl font-serif font-bold text-accent mb-4">
-            {property.price}
+            {priceDisplay}
           </p>
 
           {/* CTAs */}
@@ -664,6 +602,31 @@ function ListingForm() {
 }
 
 function PropertiesPage() {
+  // Fetch properties from API
+  const {
+    data: propertiesData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["properties"],
+    queryFn: async () => {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const response = await fetch(`${apiUrl}/properties`, {
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch properties");
+      }
+
+      const data = await response.json();
+      return data.properties || [];
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  const properties = propertiesData || [];
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -672,11 +635,32 @@ function PropertiesPage() {
       {/* Properties Grid */}
       <section className="py-12 sm:py-16 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {PROPERTIES.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-16">
+              <Loader2 className="h-8 w-8 text-accent animate-spin mb-4" />
+              <p className="text-muted-foreground">Loading properties...</p>
+            </div>
+          ) : error || !properties || properties.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16">
+              <div className="text-center">
+                <h3 className="text-2xl font-serif font-bold text-foreground mb-2">
+                  No Properties Available
+                </h3>
+                <p className="text-muted-foreground mb-6">
+                  We're updating our property listings. Please check back soon!
+                </p>
+                <Button asChild>
+                  <a href="/">Back to Home</a>
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {properties.map((property) => (
+                <PropertyCard key={property._id || property.id} property={property} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

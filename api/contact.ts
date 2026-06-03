@@ -105,11 +105,11 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // Connect to database
     await connectDB();
 
-    // Extract data
-    const { name, email, phone, message, propertyId } = req.body;
+    // Extract data from form (name, mobileNumber, queryAbout)
+    const { name, mobileNumber, queryAbout, propertyId } = req.body;
 
     // Validation
-    if (!name || !email || !phone || !message) {
+    if (!name || !mobileNumber || !queryAbout) {
       return res.status(400).json({
         success: false,
         message: 'All fields are required',
@@ -117,7 +117,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     }
 
     // Validate phone format (10 digits, starts with 6-9)
-    if (!/^[6-9]\d{9}$/.test(phone)) {
+    if (!/^[6-9]\d{9}$/.test(mobileNumber)) {
       return res.status(400).json({
         success: false,
         message: 'Enter a valid 10-digit Indian mobile number',
@@ -125,7 +125,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     }
 
     // Validate message length
-    if (message.length > 1000) {
+    if (queryAbout.length > 1000) {
       return res.status(400).json({
         success: false,
         message: 'Message cannot exceed 1000 characters',
@@ -135,9 +135,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     // Save to database
     const newContact = await Contact.create({
       name,
-      email,
-      phone,
-      message,
+      email: 'guest@apnaghar.com',
+      phone: mobileNumber,
+      message: queryAbout,
       propertyId: propertyId || null,
       ipAddress: req.ip,
     });

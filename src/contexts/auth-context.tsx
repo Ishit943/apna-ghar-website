@@ -14,6 +14,7 @@ export interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  addTeamMember: (name: string, email: string, password: string) => Promise<void>;
   isLoggedIn: boolean;
   isLoading: boolean;
 }
@@ -93,12 +94,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const addTeamMember = async (name: string, email: string, password: string) => {
+    try {
+      const response = await fetch(`${API_BASE}/api/admin/team`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Failed to add team member");
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         login,
         logout,
+        addTeamMember,
         isLoggedIn: !!user,
         isLoading,
       }}

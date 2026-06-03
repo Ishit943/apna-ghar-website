@@ -40,16 +40,24 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
+  // Helper function to set CORS headers with credentials support
+  const setCorsHeaders = (req: VercelRequest, res: VercelResponse) => {
+    const origin = req.headers.origin;
+    const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim());
+    
+    if (origin && allowedOrigins.includes(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader("Access-Control-Allow-Credentials", "true");
+    } else if (allowedOrigins.includes("*")) {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+    }
+    
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  };
+
   // Set CORS headers
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "POST, OPTIONS"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type"
-  );
+  setCorsHeaders(req, res);
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
@@ -130,7 +138,6 @@ export default async function handler(
     res.status(200).json({
       success: true,
       message: "Login successful",
-      token,
       user: {
         id: user._id,
         email: user.email,
