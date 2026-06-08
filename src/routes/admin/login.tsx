@@ -83,9 +83,7 @@ function AdminLoginPage() {
               <div className="flex items-center justify-center h-12 w-12 rounded-full bg-accent/10 text-accent mx-auto mb-4">
                 <LogIn className="h-6 w-6" />
               </div>
-              <h1 className="font-serif text-3xl font-bold text-primary mb-2">
-                Admin Login
-              </h1>
+              <h1 className="font-serif text-3xl font-bold text-primary mb-2">Admin Login</h1>
               <p className="text-sm text-muted-foreground">
                 Sign in to manage properties and team members
               </p>
@@ -135,10 +133,12 @@ function AdminLoginPage() {
               <p className="text-xs font-semibold text-foreground mb-3">Demo Credentials:</p>
               <div className="space-y-2 text-xs text-muted-foreground">
                 <p>
-                  <span className="font-medium text-foreground">Admin:</span> admin@apnaghar.com / admin123
+                  <span className="font-medium text-foreground">Admin:</span> admin@apnaghar.com /
+                  admin123
                 </p>
                 <p>
-                  <span className="font-medium text-foreground">Team Member:</span> team@apnaghar.com / team123
+                  <span className="font-medium text-foreground">Team Member:</span>{" "}
+                  team@apnaghar.com / team123
                 </p>
               </div>
             </div>

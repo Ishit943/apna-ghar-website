@@ -7,18 +7,22 @@ Your Apna Ghar website has been successfully configured for **Vercel deployment*
 ## 📁 New Files Created
 
 ### Backend API Routes
+
 - **`api/contact.ts`** - Contact form submission endpoint (Vercel Function)
 - **`api/health.ts`** - Health check endpoint for monitoring
 
 ### Configuration Files
+
 - **`vercel.json`** - Vercel deployment configuration with API routes, rewrites, and headers
 - **`.env.local`** - Local development environment variables
 - **`.env.production`** - Production environment variables (template)
 
 ### Frontend Enhancement
+
 - **`src/lib/api/client.ts`** - Centralized API client with environment-based URL handling
 
 ### Documentation
+
 - **`VERCEL_DEPLOYMENT.md`** - Complete deployment guide (25+ pages)
 - **`DEPLOYMENT_CHECKLIST.md`** - Step-by-step checklist for deployment
 - **`API_DEVELOPMENT_GUIDE.md`** - Backend development guide for adding new endpoints
@@ -27,10 +31,12 @@ Your Apna Ghar website has been successfully configured for **Vercel deployment*
 ## 🔄 Modified Files
 
 ### `package.json`
+
 - Added `@vercel/node` dependency for API functions
 - Added `vercel-build` script
 
 ### `src/routes/index.tsx`
+
 - **Before**: Hardcoded API URL to Render backend
   ```typescript
   const response = await fetch("https://apna-ghar-backend.onrender.com/api/contact", ...)
@@ -42,6 +48,7 @@ Your Apna Ghar website has been successfully configured for **Vercel deployment*
   ```
 
 ### `vercel.json`
+
 - Added API route rewrites
 - Added CORS-friendly headers
 - Added caching configuration
@@ -50,25 +57,30 @@ Your Apna Ghar website has been successfully configured for **Vercel deployment*
 ## ✨ Key Features
 
 ### 1. **Environment-Based API Endpoints**
+
 - Local development: `http://localhost:3000/api`
 - Production: `/api` (same domain)
 - No more hardcoded Render URLs!
 
 ### 2. **Serverless Backend on Vercel**
+
 - No need for separate Render deployment
 - Express routes converted to Vercel Functions
 - Automatic scaling and zero cold-start optimization available
 
 ### 3. **MongoDB Atlas Integration**
+
 - Same database connection (already working)
 - Connection pooling for Serverless efficiency
 - Automatic environment variable management
 
 ### 4. **CORS Configuration**
+
 - Smart CORS headers in `vercel.json`
 - Configurable allowed origins in environment variables
 
 ### 5. **Production-Ready**
+
 - Error handling and logging
 - Environment-specific configurations
 - Health check endpoint for monitoring
@@ -77,10 +89,12 @@ Your Apna Ghar website has been successfully configured for **Vercel deployment*
 ## 🚀 Quick Start
 
 ### 1. Local Testing (First)
+
 ```bash
 npm install
 npm run dev
 ```
+
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3000/api
 - Test contact form to verify everything works
@@ -88,6 +102,7 @@ npm run dev
 ### 2. Deploy to Vercel
 
 **Option A: Using Vercel Dashboard (Recommended for beginners)**
+
 1. Go to https://vercel.com
 2. Click "New Project"
 3. Import your GitHub repository
@@ -98,6 +113,7 @@ npm run dev
 6. Deploy!
 
 **Option B: Using Vercel CLI**
+
 ```bash
 npm i -g vercel
 vercel login
@@ -105,6 +121,7 @@ vercel deploy --prod
 ```
 
 ### 3. Verify Deployment
+
 ```bash
 # Check health endpoint
 curl https://yourproject.vercel.app/api/health
@@ -119,12 +136,12 @@ curl -X POST https://yourproject.vercel.app/api/contact \
 
 In Vercel Dashboard → Settings → Environment Variables:
 
-| Variable | Value | Required |
-|----------|-------|----------|
-| `MONGODB_URI` | Your MongoDB Atlas connection string | ✅ Yes |
-| `NODE_ENV` | `production` | ✅ Yes |
-| `ALLOWED_ORIGINS` | `https://yourproject.vercel.app` | ✅ Yes |
-| `VITE_API_URL` | `/api` | ✅ Yes (Production) |
+| Variable          | Value                                | Required            |
+| ----------------- | ------------------------------------ | ------------------- |
+| `MONGODB_URI`     | Your MongoDB Atlas connection string | ✅ Yes              |
+| `NODE_ENV`        | `production`                         | ✅ Yes              |
+| `ALLOWED_ORIGINS` | `https://yourproject.vercel.app`     | ✅ Yes              |
+| `VITE_API_URL`    | `/api`                               | ✅ Yes (Production) |
 
 ## 📊 Architecture After Changes
 
@@ -204,19 +221,25 @@ All created in root directory:
 ## ❓ Common Questions
 
 ### Q: Do I need to keep the old Render backend?
+
 **A:** No! Everything is now on Vercel. You can deactivate/delete the Render deployment.
 
 ### Q: What if I want to add more API endpoints?
+
 **A:** Create new files in `/api` folder. See API_DEVELOPMENT_GUIDE.md for examples.
 
 ### Q: Will my MongoDB data migrate automatically?
+
 **A:** No need! Your existing MongoDB Atlas database stays the same. Just provide the connection string.
 
 ### Q: What about the old `/server` folder?
+
 **A:** Can be kept for reference or deleted. The `/api` folder is what Vercel uses now.
 
 ### Q: How much will Vercel cost?
+
 **A:** Free tier includes:
+
 - Unlimited websites
 - 100GB bandwidth/month
 - ~12 million serverless function invocations/month

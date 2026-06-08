@@ -1,20 +1,20 @@
-import { VercelRequest, VercelResponse } from '@vercel/node';
-import mongoose from 'mongoose';
+import { VercelRequest, VercelResponse } from "@vercel/node";
+import mongoose from "mongoose";
 
 // MongoDB Connection
 let isConnected = false;
 
 const connectDB = async () => {
   if (isConnected) {
-    console.log('Using existing database connection');
+    console.log("Using existing database connection");
     return;
   }
 
   try {
     const mongodbUri = process.env.MONGODB_URI;
-    
+
     if (!mongodbUri) {
-      throw new Error('MONGODB_URI environment variable is not defined');
+      throw new Error("MONGODB_URI environment variable is not defined");
     }
 
     await mongoose.connect(mongodbUri, {
@@ -23,9 +23,9 @@ const connectDB = async () => {
     });
 
     isConnected = true;
-    console.log('MongoDB connected successfully');
+    console.log("MongoDB connected successfully");
   } catch (error) {
-    console.error('MongoDB connection error:', error);
+    console.error("MongoDB connection error:", error);
     throw error;
   }
 };
@@ -51,8 +51,7 @@ const contactSchema = new mongoose.Schema(
         validator: function (v) {
           return /^[6-9]\d{9}$/.test(v);
         },
-        message:
-          "Phone must be exactly 10 digits starting with 6-9",
+        message: "Phone must be exactly 10 digits starting with 6-9",
       },
     },
     message: {
@@ -77,28 +76,32 @@ const contactSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Contact Model
-const Contact = mongoose.models.Contact || mongoose.model('Contact', contactSchema);
+const Contact = mongoose.models.Contact || mongoose.model("Contact", contactSchema);
 
 // CORS Headers
 const corsHeaders = {
-  'Access-Control-Allow-Credentials': 'true',
-  'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGINS || '*',
-  'Access-Control-Allow-Methods': 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
-  'Access-Control-Allow-Headers': 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version',
+  "Access-Control-Allow-Credentials": "true",
+  "Access-Control-Allow-Origin": process.env.ALLOWED_ORIGINS || "*",
+  "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+  "Access-Control-Allow-Headers":
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version",
 };
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   // Handle CORS preflight
-  if (req.method === 'OPTIONS') {
-    return res.status(200).setHeader('Access-Control-Allow-Origin', corsHeaders['Access-Control-Allow-Origin']).end();
+  if (req.method === "OPTIONS") {
+    return res
+      .status(200)
+      .setHeader("Access-Control-Allow-Origin", corsHeaders["Access-Control-Allow-Origin"])
+      .end();
   }
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, message: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ success: false, message: "Method not allowed" });
   }
 
   try {
@@ -112,7 +115,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     if (!name || !mobileNumber || !queryAbout) {
       return res.status(400).json({
         success: false,
-        message: 'All fields are required',
+        message: "All fields are required",
       });
     }
 
@@ -120,7 +123,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     if (!/^[6-9]\d{9}$/.test(mobileNumber)) {
       return res.status(400).json({
         success: false,
-        message: 'Enter a valid 10-digit Indian mobile number',
+        message: "Enter a valid 10-digit Indian mobile number",
       });
     }
 
@@ -128,21 +131,21 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     if (queryAbout.length > 1000) {
       return res.status(400).json({
         success: false,
-        message: 'Message cannot exceed 1000 characters',
+        message: "Message cannot exceed 1000 characters",
       });
     }
 
     // Save to database
     const newContact = await Contact.create({
       name,
-      email: 'guest@apnaghar.com',
+      email: "guest@apnaghar.com",
       phone: mobileNumber,
       message: queryAbout,
       propertyId: propertyId || null,
       ipAddress: req.ip,
     });
 
-    console.log('New Contact Saved:', newContact);
+    console.log("New Contact Saved:", newContact);
 
     // Set CORS headers on response
     Object.keys(corsHeaders).forEach((key) => {
@@ -151,11 +154,11 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     return res.status(201).json({
       success: true,
-      message: 'Form submitted successfully',
+      message: "Form submitted successfully",
       data: newContact,
     });
   } catch (error) {
-    console.error('Contact form error:', error);
+    console.error("Contact form error:", error);
 
     // Set CORS headers on error response
     Object.keys(corsHeaders).forEach((key) => {
@@ -164,8 +167,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 
     return res.status(500).json({
       success: false,
-      message: 'Server error while saving form',
-      error: process.env.NODE_ENV === 'development' ? error : undefined,
+      message: "Server error while saving form",
+      error: process.env.NODE_ENV === "development" ? error : undefined,
     });
   }
 };

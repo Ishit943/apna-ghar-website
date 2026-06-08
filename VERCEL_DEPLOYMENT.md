@@ -56,16 +56,18 @@ npm run dev
 ```
 
 - Frontend: http://localhost:5173
-- Backend APIs: http://localhost:3000/api/*
+- Backend APIs: http://localhost:3000/api/\*
 
 ### 4. Test the Backend APIs
 
 **Health Check:**
+
 ```bash
 curl http://localhost:3000/api/health
 ```
 
 **Contact Form:**
+
 ```bash
 curl -X POST http://localhost:3000/api/contact \
   -H "Content-Type: application/json" \
@@ -91,6 +93,7 @@ git push origin main
 ### Step 2: Create Vercel Project
 
 **Option A: Using Vercel Dashboard**
+
 1. Go to [vercel.com](https://vercel.com)
 2. Sign in with GitHub/GitLab/Bitbucket
 3. Click "New Project"
@@ -111,14 +114,15 @@ vercel
 
 In Vercel Dashboard → Project Settings → Environment Variables, add:
 
-| Variable | Value | When |
-|----------|-------|------|
-| `MONGODB_URI` | Your MongoDB Atlas connection string | All |
-| `NODE_ENV` | `production` | Production |
-| `ALLOWED_ORIGINS` | `https://yourproject.vercel.app` | All |
-| `VITE_API_URL` | `/api` | Production |
+| Variable          | Value                                | When       |
+| ----------------- | ------------------------------------ | ---------- |
+| `MONGODB_URI`     | Your MongoDB Atlas connection string | All        |
+| `NODE_ENV`        | `production`                         | Production |
+| `ALLOWED_ORIGINS` | `https://yourproject.vercel.app`     | All        |
+| `VITE_API_URL`    | `/api`                               | Production |
 
 **MongoDB Connection String:**
+
 ```
 mongodb://apnagharadmin:e8Y89WVGFCc0km2N@ac-xclviip-shard-00-00.njj7wev.mongodb.net:27017,ac-xclviip-shard-00-01.njj7wev.mongodb.net:27017,ac-xclviip-shard-00-02.njj7wev.mongodb.net:27017/?ssl=true&replicaSet=atlas-33n13i-shard-0&authSource=admin&appName=apna-ghar-db
 ```
@@ -130,6 +134,7 @@ vercel deploy --prod
 ```
 
 Or use automatic deployments:
+
 - Push to main branch → Automatic production deployment
 - Push to other branches → Preview deployment
 
@@ -137,7 +142,7 @@ Or use automatic deployments:
 
 1. **Check Frontend**: `https://yourproject.vercel.app`
 2. **Test Backend Health**: `https://yourproject.vercel.app/api/health`
-3. **Test Contact Form**: 
+3. **Test Contact Form**:
    ```bash
    curl -X POST https://yourproject.vercel.app/api/contact \
      -H "Content-Type: application/json" \
@@ -155,6 +160,7 @@ Or use automatic deployments:
 **Error**: `MONGODB_URI environment variable is not defined`
 
 **Solution**:
+
 - Check that `MONGODB_URI` is set in Vercel Environment Variables
 - Verify IP whitelist in MongoDB Atlas (allow Vercel IPs: 0.0.0.0/0 or specific Vercel ranges)
 
@@ -163,6 +169,7 @@ Or use automatic deployments:
 **Error**: `Access to XMLHttpRequest blocked by CORS policy`
 
 **Solution**:
+
 - Ensure `ALLOWED_ORIGINS` includes your Vercel domain
 - Update in Vercel → Environment Variables
 
@@ -171,6 +178,7 @@ Or use automatic deployments:
 **Error**: `/api/contact returns 404`
 
 **Solution**:
+
 - Verify files exist in `/api` directory
 - Check file names match exactly: `contact.ts`, `health.ts`
 - Ensure TypeScript is compiled (should be automatic)
@@ -178,6 +186,7 @@ Or use automatic deployments:
 ### 4. Build Failures
 
 **Common causes**:
+
 - TypeScript errors in `/api` folder
 - Missing dependencies (run `npm install` before deploy)
 - Check Build Logs in Vercel Dashboard
@@ -221,14 +230,14 @@ Create new files in `/api` directory:
 
 ```typescript
 // api/properties.ts
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
 export default async (req: VercelRequest, res: VercelResponse) => {
-  if (req.method === 'GET') {
+  if (req.method === "GET") {
     // Handle GET request
     return res.status(200).json({ properties: [] });
   }
-  res.status(405).json({ error: 'Method not allowed' });
+  res.status(405).json({ error: "Method not allowed" });
 };
 ```
 

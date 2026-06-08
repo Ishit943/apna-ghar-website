@@ -4,9 +4,7 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 
 // MongoDB URI - should be in environment variables
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  "mongodb://localhost:27017/apna-ghar";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/apna-ghar";
 
 // User Schema
 const userSchema = new mongoose.Schema(
@@ -19,39 +17,31 @@ const userSchema = new mongoose.Schema(
     lastLogin: Date,
     phone: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Get or create User model
-let User =
-  mongoose.models.User ||
-  mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 const generateToken = (userId, role) => {
-  return jwt.sign(
-    { userId, role },
-    process.env.JWT_SECRET ||
-      "your-secret-key-change-this",
-    { expiresIn: "24h" }
-  );
+  return jwt.sign({ userId, role }, process.env.JWT_SECRET || "your-secret-key-change-this", {
+    expiresIn: "24h",
+  });
 };
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Helper function to set CORS headers with credentials support
   const setCorsHeaders = (req: VercelRequest, res: VercelResponse) => {
     const origin = req.headers.origin;
-    const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim());
-    
+    const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((o) => o.trim());
+
     if (origin && allowedOrigins.includes(origin)) {
       res.setHeader("Access-Control-Allow-Origin", origin);
       res.setHeader("Access-Control-Allow-Credentials", "true");
     } else if (allowedOrigins.includes("*")) {
       res.setHeader("Access-Control-Allow-Origin", "*");
     }
-    
+
     res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   };
@@ -77,23 +67,17 @@ export default async function handler(
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message:
-          "Please provide email and password",
+        message: "Please provide email and password",
       });
     }
 
     // Connect to MongoDB
-    if (
-      mongoose.connection.readyState === 0
-    ) {
+    if (mongoose.connection.readyState === 0) {
       await mongoose.connect(MONGODB_URI);
     }
 
     // Find user
-    const user = await User.findOne(
-      { email },
-      { passwordHash: 1, role: 1, isActive: 1 }
-    );
+    const user = await User.findOne({ email }, { passwordHash: 1, role: 1, isActive: 1 });
 
     if (!user) {
       return res.status(401).json({
@@ -111,10 +95,7 @@ export default async function handler(
     }
 
     // Compare passwords
-    const isMatch = await bcryptjs.compare(
-      password,
-      user.passwordHash
-    );
+    const isMatch = await bcryptjs.compare(password, user.passwordHash);
 
     if (!isMatch) {
       return res.status(401).json({

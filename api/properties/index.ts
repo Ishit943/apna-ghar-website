@@ -1,9 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import mongoose from "mongoose";
 
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  "mongodb://localhost:27017/apna-ghar";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/apna-ghar";
 
 // User Schema
 const userSchema = new mongoose.Schema(
@@ -15,12 +13,10 @@ const userSchema = new mongoose.Schema(
     isActive: Boolean,
     lastLogin: Date,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const User =
-  mongoose.models.User ||
-  mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 // Property Schema
 const propertySchema = new mongoose.Schema(
@@ -45,20 +41,15 @@ const propertySchema = new mongoose.Schema(
       ref: "User",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Property =
-  mongoose.models.Property ||
-  mongoose.model("Property", propertySchema);
+const Property = mongoose.models.Property || mongoose.model("Property", propertySchema);
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS headers with credentials support
   const origin = req.headers.origin;
-  const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim());
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((o) => o.trim());
   if (origin && allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Credentials", "true");
@@ -74,25 +65,15 @@ export default async function handler(
 
   try {
     // Connect to MongoDB
-    if (
-      mongoose.connection.readyState === 0
-    ) {
+    if (mongoose.connection.readyState === 0) {
       await mongoose.connect(MONGODB_URI);
     }
 
     if (req.method === "GET") {
       // Get all properties with search, filter, pagination
-      const {
-        search,
-        type,
-        minPrice,
-        maxPrice,
-        location,
-        page = 1,
-        limit = 12,
-      } = req.query;
+      const { search, type, minPrice, maxPrice, location, page = 1, limit = 12 } = req.query;
 
-      let filter = { status: "active" };
+      const filter: Record<string, unknown> = { status: "active" };
 
       if (search) {
         filter.$text = { $search: search };
@@ -111,20 +92,14 @@ export default async function handler(
 
       if (minPrice || maxPrice) {
         filter.price = {};
-        if (minPrice)
-          filter.price.$gte = Number(minPrice);
-        if (maxPrice)
-          filter.price.$lte = Number(maxPrice);
+        if (minPrice) filter.price.$gte = Number(minPrice);
+        if (maxPrice) filter.price.$lte = Number(maxPrice);
       }
 
-      const skip =
-        (Number(page) - 1) * Number(limit);
-      const total =
-        await Property.countDocuments(filter);
+      const skip = (Number(page) - 1) * Number(limit);
+      const total = await Property.countDocuments(filter);
 
-      const properties = await Property.find(
-        filter
-      )
+      const properties = await Property.find(filter)
         .populate("createdBy", "name email")
         .skip(skip)
         .limit(Number(limit))
@@ -137,9 +112,7 @@ export default async function handler(
           page: Number(page),
           limit: Number(limit),
           total,
-          pages: Math.ceil(
-            total / Number(limit)
-          ),
+          pages: Math.ceil(total / Number(limit)),
         },
       });
     }
@@ -147,8 +120,7 @@ export default async function handler(
     if (req.method === "POST") {
       return res.status(400).json({
         success: false,
-        message:
-          "Use /api/properties/create endpoint",
+        message: "Use /api/properties/create endpoint",
       });
     }
   } catch (error) {

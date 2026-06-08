@@ -78,26 +78,28 @@ function AdminDashboard() {
 
   const handleAddProperty = async (e: FormEvent) => {
     e.preventDefault();
-    if (!propertyForm.title || !propertyForm.location || !propertyForm.price || !propertyForm.description) {
+    if (
+      !propertyForm.title ||
+      !propertyForm.location ||
+      !propertyForm.price ||
+      !propertyForm.description
+    ) {
       toast.error("Please fill all required fields");
       return;
     }
 
     try {
-      addProperty(
-        {
-          title: propertyForm.title,
-          location: propertyForm.location,
-          type: propertyForm.type,
-          price: propertyForm.price,
-          image: propertyForm.image,
-          description: propertyForm.description,
-          sqft: propertyForm.sqft,
-          beds: propertyForm.beds ? parseInt(propertyForm.beds) : undefined,
-          baths: propertyForm.baths ? parseInt(propertyForm.baths) : undefined,
-        },
-        user.id
-      );
+      addProperty({
+        title: propertyForm.title,
+        location: propertyForm.location,
+        type: propertyForm.type as "apartment" | "house" | "villa" | "plot" | "commercial",
+        price: parseInt(propertyForm.price),
+        images: [propertyForm.image],
+        description: propertyForm.description,
+        sqft: parseInt(propertyForm.sqft),
+        beds: propertyForm.beds ? parseInt(propertyForm.beds) : 0,
+        baths: propertyForm.baths ? parseInt(propertyForm.baths) : 0,
+      });
       toast.success("Property added successfully!");
       setPropertyForm({
         title: "",
@@ -119,7 +121,7 @@ function AdminDashboard() {
   const handleRemoveProperty = async (id: string) => {
     if (confirm("Are you sure you want to delete this property?")) {
       try {
-        await removeProperty(id, user.id);
+        await removeProperty(id);
         toast.success("Property removed successfully!");
       } catch (error) {
         toast.error("Failed to remove property");
@@ -143,11 +145,7 @@ function AdminDashboard() {
               <p className="text-xs text-muted-foreground">Welcome, {user.name}</p>
             </div>
             <div className="flex items-center gap-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleLogout}
-              >
+              <Button variant="outline" size="sm" onClick={handleLogout}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
               </Button>
@@ -201,26 +199,36 @@ function AdminDashboard() {
             {properties.length === 0 ? (
               <Card className="p-8 text-center">
                 <p className="text-muted-foreground mb-4">No properties yet</p>
-                <Button onClick={() => setActiveTab("add-property")}>Add Your First Property</Button>
+                <Button onClick={() => setActiveTab("add-property")}>
+                  Add Your First Property
+                </Button>
               </Card>
             ) : (
               <div className="grid gap-6 md:grid-cols-2">
                 {properties.map((property) => (
-                  <Card key={property.id} className="overflow-hidden">
-                    <img src={property.image} alt={property.title} className="w-full h-48 object-cover" />
+                  <Card key={property._id} className="overflow-hidden">
+                    <img
+                      src={property.images?.[0]}
+                      alt={property.title}
+                      className="w-full h-48 object-cover"
+                    />
                     <div className="p-4">
                       <h3 className="font-serif font-bold text-lg mb-2">{property.title}</h3>
                       <p className="text-sm text-muted-foreground mb-3">{property.location}</p>
                       <div className="flex justify-between items-center mb-4">
                         <span className="font-semibold text-accent">{property.price}</span>
-                        <span className="text-xs bg-secondary px-3 py-1 rounded">{property.type}</span>
+                        <span className="text-xs bg-secondary px-3 py-1 rounded">
+                          {property.type}
+                        </span>
                       </div>
-                      <p className="text-sm text-foreground/70 mb-4 line-clamp-2">{property.description}</p>
+                      <p className="text-sm text-foreground/70 mb-4 line-clamp-2">
+                        {property.description}
+                      </p>
                       <div className="flex gap-2">
                         <Button
                           variant="destructive"
                           size="sm"
-                          onClick={() => handleRemoveProperty(property.id)}
+                          onClick={() => handleRemoveProperty(property._id)}
                           className="flex-1"
                         >
                           <Trash2 className="h-4 w-4 mr-2" />
@@ -257,7 +265,9 @@ function AdminDashboard() {
                     <Input
                       id="location"
                       value={propertyForm.location}
-                      onChange={(e) => setPropertyForm({ ...propertyForm, location: e.target.value })}
+                      onChange={(e) =>
+                        setPropertyForm({ ...propertyForm, location: e.target.value })
+                      }
                       placeholder="e.g., Malviya Nagar, Jaipur"
                       className="mt-2"
                     />
@@ -269,6 +279,7 @@ function AdminDashboard() {
                     <Label htmlFor="type">Property Type</Label>
                     <select
                       id="type"
+                      title="Property Type"
                       value={propertyForm.type}
                       onChange={(e) => setPropertyForm({ ...propertyForm, type: e.target.value })}
                       className="w-full px-3 py-2 border border-border rounded-md bg-background mt-2"
@@ -332,7 +343,9 @@ function AdminDashboard() {
                   <textarea
                     id="description"
                     value={propertyForm.description}
-                    onChange={(e) => setPropertyForm({ ...propertyForm, description: e.target.value })}
+                    onChange={(e) =>
+                      setPropertyForm({ ...propertyForm, description: e.target.value })
+                    }
                     placeholder="Property details and amenities..."
                     className="w-full px-3 py-2 border border-border rounded-md bg-background mt-2 min-h-24"
                   />
@@ -421,10 +434,18 @@ function AdminDashboard() {
 
                 {/* Load team members from storage */}
                 {(() => {
-                  const users = JSON.parse(localStorage.getItem("users") || "[]");
-                  const teamMembers = users.filter((u: any) => u.role === "team_member");
+                  const users = JSON.parse(localStorage.getItem("users") || "[]") as Array<{
+                    id: string;
+                    role: string;
+                    name: string;
+                    email: string;
+                  }>;
+                  const teamMembers = users.filter(
+                    (u: { id: string; role: string; name: string; email: string }) =>
+                      u.role === "team_member",
+                  );
                   return teamMembers.length > 0 ? (
-                    teamMembers.map((member: any) => (
+                    teamMembers.map((member: { id: string; name: string; email: string }) => (
                       <Card key={member.id} className="p-4">
                         <div className="flex justify-between items-center">
                           <div>

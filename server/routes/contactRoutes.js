@@ -4,10 +4,7 @@ import {
   getContacts,
   updateContactStatus,
 } from "../controllers/contactController.js";
-import {
-  authMiddleware,
-  authorize,
-} from "../utils/auth.js";
+import { authMiddleware, authorize } from "../utils/auth.js";
 
 const router = express.Router();
 
@@ -15,19 +12,9 @@ const router = express.Router();
 router.post("/", submitContactForm);
 
 // Get all contacts (admin/team only)
-router.get(
-  "/admin",
-  authMiddleware,
-  authorize("admin", "team_member"),
-  getContacts
-);
+router.get("/admin", authMiddleware, authorize("admin", "team_member"), getContacts);
 
 // Update contact status (admin/team only)
-router.put(
-  "/admin/:id",
-  authMiddleware,
-  authorize("admin", "team_member"),
-  updateContactStatus
-);
+router.put("/admin/:id", authMiddleware, authorize("admin", "team_member"), updateContactStatus);
 
 export default router;

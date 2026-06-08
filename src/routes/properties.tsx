@@ -1,7 +1,20 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, MapPin, Maximize2, Bed, Bath, Phone, MessageSquare, Upload, Building2, Home, DollarSign, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  MapPin,
+  Maximize2,
+  Bed,
+  Bath,
+  Phone,
+  MessageSquare,
+  Upload,
+  Building2,
+  Home,
+  DollarSign,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,11 +35,13 @@ export const Route = createFileRoute("/properties")({
       { title: "Premium Properties | Apna Ghar Consultants — Kota & Jaipur" },
       {
         name: "description",
-        content: "Browse our exclusive collection of luxury residential plots, villas, farmhouses, apartments, and commercial properties in Kota and Jaipur with premium locations.",
+        content:
+          "Browse our exclusive collection of luxury residential plots, villas, farmhouses, apartments, and commercial properties in Kota and Jaipur with premium locations.",
       },
       {
         name: "keywords",
-        content: "luxury properties, residential plots, villas, farmhouses, apartments, commercial property, Kota, Jaipur",
+        content:
+          "luxury properties, residential plots, villas, farmhouses, apartments, commercial property, Kota, Jaipur",
       },
       { property: "og:title", content: "Premium Properties | Apna Ghar Consultants" },
       {
@@ -81,7 +96,8 @@ function HeroSection() {
             Our Luxury Portfolio
           </h1>
           <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover our curated collection of premium properties across Kota and Jaipur. From residential plots to luxury villas, find your dream investment.
+            Discover our curated collection of premium properties across Kota and Jaipur. From
+            residential plots to luxury villas, find your dream investment.
           </p>
         </div>
       </div>
@@ -128,14 +144,20 @@ interface Property {
 
 function PropertyCard({ property }: { property: Property }) {
   const navigate = useNavigate();
-  
+
   // Get the image URL (from either image or images array)
-  const imageUrl = property.image || (property.images && property.images[0]) || "https://picsum.photos/600/400?random=999";
-  
+  const imageUrl =
+    property.image ||
+    (property.images && property.images[0]) ||
+    "https://picsum.photos/600/400?random=999";
+
   // Format price display
-  const priceDisplay = property.priceDisplay || 
-    (typeof property.price === 'number' ? `₹ ${property.price.toLocaleString("en-IN")}` : property.price);
-  
+  const priceDisplay =
+    property.priceDisplay ||
+    (typeof property.price === "number"
+      ? `₹ ${property.price.toLocaleString("en-IN")}`
+      : property.price);
+
   // Get property ID for navigation
   const propertyId = property._id || property.id;
 
@@ -253,9 +275,7 @@ function ListingForm() {
   const [images, setImages] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
@@ -348,9 +368,7 @@ function ListingForm() {
         </div>
 
         <div className="bg-card border border-border rounded-lg p-8 sm:p-12 shadow-lg">
-          <h3 className="font-serif text-3xl font-bold text-primary mb-2">
-            Property Details
-          </h3>
+          <h3 className="font-serif text-3xl font-bold text-primary mb-2">Property Details</h3>
           <p className="text-sm text-muted-foreground mb-8">
             Fill in your property information below. All fields are required.
           </p>
@@ -364,7 +382,9 @@ function ListingForm() {
               </h4>
               <div className="grid gap-6 sm:grid-cols-2">
                 <div>
-                  <Label htmlFor="fullName" className="block font-medium text-foreground mb-2">Full Name *</Label>
+                  <Label htmlFor="fullName" className="block font-medium text-foreground mb-2">
+                    Full Name *
+                  </Label>
                   <Input
                     id="fullName"
                     name="fullName"
@@ -377,7 +397,9 @@ function ListingForm() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="mobileNumber" className="block font-medium text-foreground mb-2">Mobile Number *</Label>
+                  <Label htmlFor="mobileNumber" className="block font-medium text-foreground mb-2">
+                    Mobile Number *
+                  </Label>
                   <Input
                     id="mobileNumber"
                     name="mobileNumber"
@@ -391,7 +413,9 @@ function ListingForm() {
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <Label htmlFor="email" className="block font-medium text-foreground mb-2">Email Address *</Label>
+                  <Label htmlFor="email" className="block font-medium text-foreground mb-2">
+                    Email Address *
+                  </Label>
                   <Input
                     id="email"
                     name="email"
@@ -414,7 +438,9 @@ function ListingForm() {
               </h4>
               <div className="grid gap-6 sm:grid-cols-2">
                 <div>
-                  <Label htmlFor="propertyType" className="block font-medium text-foreground mb-2">Property Type *</Label>
+                  <Label htmlFor="propertyType" className="block font-medium text-foreground mb-2">
+                    Property Type *
+                  </Label>
                   <Select
                     value={form.propertyType}
                     onValueChange={(value) => handleSelectChange("propertyType", value)}
@@ -432,7 +458,12 @@ function ListingForm() {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="propertyPurpose" className="block font-medium text-foreground mb-2">Purpose *</Label>
+                  <Label
+                    htmlFor="propertyPurpose"
+                    className="block font-medium text-foreground mb-2"
+                  >
+                    Purpose *
+                  </Label>
                   <Select
                     value={form.propertyPurpose}
                     onValueChange={(value) => handleSelectChange("propertyPurpose", value)}
@@ -450,7 +481,12 @@ function ListingForm() {
                   </Select>
                 </div>
                 <div className="sm:col-span-2">
-                  <Label htmlFor="propertyAddress" className="block font-medium text-foreground mb-2">Property Address *</Label>
+                  <Label
+                    htmlFor="propertyAddress"
+                    className="block font-medium text-foreground mb-2"
+                  >
+                    Property Address *
+                  </Label>
                   <Input
                     id="propertyAddress"
                     name="propertyAddress"
@@ -463,8 +499,13 @@ function ListingForm() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="city" className="block font-medium text-foreground mb-2">City *</Label>
-                  <Select value={form.city} onValueChange={(value) => handleSelectChange("city", value)}>
+                  <Label htmlFor="city" className="block font-medium text-foreground mb-2">
+                    City *
+                  </Label>
+                  <Select
+                    value={form.city}
+                    onValueChange={(value) => handleSelectChange("city", value)}
+                  >
                     <SelectTrigger id="city" className="mt-0">
                       <SelectValue placeholder="Select city" />
                     </SelectTrigger>
@@ -479,10 +520,11 @@ function ListingForm() {
                 </div>
                 <div>
                   <Label htmlFor="budget" className="block font-medium text-foreground mb-2">
-                    Budget / Expected Price ({form.propertyPurpose === "Rent" ||
-                    form.propertyPurpose === "Lease"
+                    Budget / Expected Price (
+                    {form.propertyPurpose === "Rent" || form.propertyPurpose === "Lease"
                       ? "Monthly"
-                      : "Total"}) *
+                      : "Total"}
+                    ) *
                   </Label>
                   <Input
                     id="budget"
@@ -500,7 +542,9 @@ function ListingForm() {
 
             {/* Property Description */}
             <div>
-              <Label htmlFor="description" className="block font-medium text-foreground mb-2">Property Description *</Label>
+              <Label htmlFor="description" className="block font-medium text-foreground mb-2">
+                Property Description *
+              </Label>
               <Textarea
                 id="description"
                 name="description"
@@ -518,11 +562,13 @@ function ListingForm() {
 
             {/* Image Upload */}
             <div>
-              <Label htmlFor="images" className="block font-medium text-foreground mb-3">Upload Property Images</Label>
+              <Label htmlFor="images" className="block font-medium text-foreground mb-3">
+                Upload Property Images
+              </Label>
               <p className="text-sm text-muted-foreground mb-3">
                 Upload up to 5 images. Supported formats: JPG, PNG. Max 5MB per image.
               </p>
-              <div 
+              <div
                 className="border-2 border-dashed border-border rounded-lg p-6 text-center hover:border-accent hover:bg-accent/5 transition-all duration-200 cursor-pointer active:scale-95"
                 onClick={() => fileInputRef.current?.click()}
               >
@@ -565,9 +611,7 @@ function ListingForm() {
                         >
                           ✕
                         </button>
-                        <p className="text-xs text-muted-foreground mt-2 truncate">
-                          {file.name}
-                        </p>
+                        <p className="text-xs text-muted-foreground mt-2 truncate">{file.name}</p>
                       </div>
                     ))}
                   </div>
@@ -577,9 +621,9 @@ function ListingForm() {
 
             {/* Form Actions */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-6">
-              <Button 
-                type="submit" 
-                size="lg" 
+              <Button
+                type="submit"
+                size="lg"
                 className="flex-1 uppercase tracking-wider transition-all duration-200 hover:shadow-lg"
               >
                 Submit Property
@@ -610,9 +654,9 @@ function PropertiesPage() {
   } = useQuery({
     queryKey: ["properties"],
     queryFn: async () => {
-      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const apiUrl = import.meta.env.VITE_API_URL || "/api";
       const response = await fetch(`${apiUrl}/properties`, {
-        credentials: 'include',
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -743,24 +787,58 @@ function PropertiesPage() {
                   <div className="text-xs tracking-[0.15em] text-muted-foreground">CONSULTANTS</div>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">Your trusted partner for luxury real estate in Kota & Jaipur.</p>
+              <p className="text-sm text-muted-foreground">
+                Your trusted partner for luxury real estate in Kota & Jaipur.
+              </p>
             </div>
             <div>
               <h4 className="font-semibold text-foreground mb-3">Quick Links</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="/" className="hover:text-accent transition-colors">Home</a></li>
-                <li><a href="/properties" className="hover:text-accent transition-colors">Properties</a></li>
-                <li><a href="/#about" className="hover:text-accent transition-colors">About Us</a></li>
-                <li><a href="/faq" className="hover:text-accent transition-colors">FAQ</a></li>
+                <li>
+                  <a href="/" className="hover:text-accent transition-colors">
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a href="/properties" className="hover:text-accent transition-colors">
+                    Properties
+                  </a>
+                </li>
+                <li>
+                  <a href="/#about" className="hover:text-accent transition-colors">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a href="/faq" className="hover:text-accent transition-colors">
+                    FAQ
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-foreground mb-3">Services</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="/#services" className="hover:text-accent transition-colors">Buy Property</a></li>
-                <li><a href="/#services" className="hover:text-accent transition-colors">Sell Property</a></li>
-                <li><a href="/emi-calculator" className="hover:text-accent transition-colors">EMI Calculator</a></li>
-                <li><a href="/properties#list" className="hover:text-accent transition-colors">List Property</a></li>
+                <li>
+                  <a href="/#services" className="hover:text-accent transition-colors">
+                    Buy Property
+                  </a>
+                </li>
+                <li>
+                  <a href="/#services" className="hover:text-accent transition-colors">
+                    Sell Property
+                  </a>
+                </li>
+                <li>
+                  <a href="/emi-calculator" className="hover:text-accent transition-colors">
+                    EMI Calculator
+                  </a>
+                </li>
+                <li>
+                  <a href="/properties#list" className="hover:text-accent transition-colors">
+                    List Property
+                  </a>
+                </li>
               </ul>
             </div>
             <div>

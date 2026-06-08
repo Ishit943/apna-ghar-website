@@ -2,23 +2,11 @@ import Contact from "../models/Contact.js";
 import { authMiddleware, authorize } from "../utils/auth.js";
 
 // Submit contact form (public)
-export const submitContactForm = async (
-  req,
-  res
-) => {
+export const submitContactForm = async (req, res) => {
   try {
-    console.log(
-      "📨 Contact form request received:",
-      req.body
-    );
+    console.log("📨 Contact form request received:", req.body);
 
-    const {
-      name,
-      email,
-      phone,
-      message,
-      propertyId,
-    } = req.body;
+    const { name, email, phone, message, propertyId } = req.body;
 
     // Validation
     if (!name || !email || !phone || !message) {
@@ -32,8 +20,7 @@ export const submitContactForm = async (
     if (!/^[6-9]\d{9}$/.test(phone)) {
       return res.status(400).json({
         success: false,
-        message:
-          "Enter a valid 10-digit Indian mobile number",
+        message: "Enter a valid 10-digit Indian mobile number",
       });
     }
 
@@ -41,8 +28,7 @@ export const submitContactForm = async (
     if (message.length > 1000) {
       return res.status(400).json({
         success: false,
-        message:
-          "Message cannot exceed 1000 characters",
+        message: "Message cannot exceed 1000 characters",
       });
     }
 
@@ -56,22 +42,15 @@ export const submitContactForm = async (
       ipAddress: req.ip,
     });
 
-    console.log(
-      "New Contact Saved:",
-      newContact
-    );
+    console.log("New Contact Saved:", newContact);
 
     res.status(201).json({
       success: true,
-      message:
-        "Contact form submitted successfully",
+      message: "Contact form submitted successfully",
       contactId: newContact._id,
     });
   } catch (error) {
-    console.error(
-      "Contact form error:",
-      error
-    );
+    console.error("Contact form error:", error);
 
     res.status(500).json({
       success: false,
@@ -81,24 +60,17 @@ export const submitContactForm = async (
 };
 
 // Get all contacts (admin/team only)
-export const getContacts = async (
-  req,
-  res
-) => {
+export const getContacts = async (req, res) => {
   try {
-    const { page = 1, limit = 20, status } =
-      req.query;
+    const { page = 1, limit = 20, status } = req.query;
 
     let filter = {};
     if (status) {
       filter.status = status;
     }
 
-    const skip =
-      (Number(page) - 1) * Number(limit);
-    const total = await Contact.countDocuments(
-      filter
-    );
+    const skip = (Number(page) - 1) * Number(limit);
+    const total = await Contact.countDocuments(filter);
 
     const contacts = await Contact.find(filter)
       .populate("propertyId", "title location price")
@@ -118,10 +90,7 @@ export const getContacts = async (
       },
     });
   } catch (error) {
-    console.error(
-      "Get contacts error:",
-      error
-    );
+    console.error("Get contacts error:", error);
     res.status(500).json({
       success: false,
       message: "Error fetching contacts",
@@ -130,30 +99,18 @@ export const getContacts = async (
 };
 
 // Update contact status (admin/team only)
-export const updateContactStatus = async (
-  req,
-  res
-) => {
+export const updateContactStatus = async (req, res) => {
   try {
     const { status } = req.body;
 
-    if (
-      ![
-        "new",
-        "read",
-        "responded",
-        "archived",
-      ].includes(status)
-    ) {
+    if (!["new", "read", "responded", "archived"].includes(status)) {
       return res.status(400).json({
         success: false,
         message: "Invalid status",
       });
     }
 
-    const contact = await Contact.findById(
-      req.params.id
-    );
+    const contact = await Contact.findById(req.params.id);
 
     if (!contact) {
       return res.status(404).json({
@@ -176,10 +133,7 @@ export const updateContactStatus = async (
       contact,
     });
   } catch (error) {
-    console.error(
-      "Update contact error:",
-      error
-    );
+    console.error("Update contact error:", error);
     res.status(500).json({
       success: false,
       message: "Error updating contact",

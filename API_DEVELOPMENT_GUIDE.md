@@ -20,26 +20,26 @@ api/
 Create `api/properties.ts`:
 
 ```typescript
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   // Handle CORS
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "GET") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
     // Your logic here
     const properties = [
-      { id: 1, name: 'Property 1', price: 1000000 },
-      { id: 2, name: 'Property 2', price: 2000000 },
+      { id: 1, name: "Property 1", price: 1000000 },
+      { id: 2, name: "Property 2", price: 2000000 },
     ];
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader("Access-Control-Allow-Origin", "*");
     return res.status(200).json({
       success: true,
       data: properties,
@@ -48,7 +48,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: "Server error",
     });
   }
 };
@@ -61,8 +61,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
 Create `api/properties/create.ts`:
 
 ```typescript
-import { VercelRequest, VercelResponse } from '@vercel/node';
-import mongoose from 'mongoose';
+import { VercelRequest, VercelResponse } from "@vercel/node";
+import mongoose from "mongoose";
 
 // Reuse MongoDB connection
 let isConnected = false;
@@ -74,7 +74,7 @@ const connectDB = async () => {
     await mongoose.connect(process.env.MONGODB_URI!);
     isConnected = true;
   } catch (error) {
-    console.error('DB connection error:', error);
+    console.error("DB connection error:", error);
     throw error;
   }
 };
@@ -88,11 +88,11 @@ const propertySchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const Property = mongoose.models.Property || mongoose.model('Property', propertySchema);
+const Property = mongoose.models.Property || mongoose.model("Property", propertySchema);
 
 export default async (req: VercelRequest, res: VercelResponse) => {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
@@ -107,7 +107,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       location,
     });
 
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader("Access-Control-Allow-Origin", "*");
     return res.status(201).json({
       success: true,
       data: property,
@@ -116,7 +116,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      message: 'Server error',
+      message: "Server error",
     });
   }
 };
@@ -166,7 +166,7 @@ const connectDB = async () => {
   if (cachedConnection) {
     return cachedConnection;
   }
-  
+
   const connection = await mongoose.connect(process.env.MONGODB_URI!);
   cachedConnection = connection;
   return connection;
@@ -181,12 +181,12 @@ Always wrap in try-catch:
 try {
   // Your code
 } catch (error) {
-  console.error('Error details:', error);
+  console.error("Error details:", error);
   return res.status(500).json({
     success: false,
-    message: 'Server error',
+    message: "Server error",
     // Only include error details in development
-    ...(process.env.NODE_ENV === 'development' && { error }),
+    ...(process.env.NODE_ENV === "development" && { error }),
   });
 }
 ```
@@ -196,12 +196,12 @@ try {
 Use Zod for schema validation:
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 const contactSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  mobileNumber: z.string().regex(/^[0-9+\-\s]{7,15}$/, 'Invalid phone'),
-  queryAbout: z.string().min(1, 'Query is required'),
+  name: z.string().min(1, "Name is required"),
+  mobileNumber: z.string().regex(/^[0-9+\-\s]{7,15}$/, "Invalid phone"),
+  queryAbout: z.string().min(1, "Query is required"),
 });
 
 const data = contactSchema.parse(req.body);
@@ -213,14 +213,14 @@ Set appropriate CORS headers:
 
 ```typescript
 const allowedOrigins = [
-  'https://yourdomain.vercel.app',
-  'https://yourdomain.com',
-  process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : null,
+  "https://yourdomain.vercel.app",
+  "https://yourdomain.com",
+  process.env.NODE_ENV === "development" ? "http://localhost:5173" : null,
 ].filter(Boolean);
 
 const origin = req.headers.origin;
 if (allowedOrigins.includes(origin)) {
-  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader("Access-Control-Allow-Origin", origin);
 }
 ```
 
@@ -230,7 +230,7 @@ For production, consider rate limiting:
 
 ```typescript
 // Simple rate limiting using Vercel KV (requires KV store)
-import { kv } from '@vercel/kv';
+import { kv } from "@vercel/kv";
 
 const rateLimit = async (key: string) => {
   const count = (await kv.incr(key)) || 0;
@@ -243,7 +243,7 @@ const rateLimit = async (key: string) => {
 // In handler:
 const limit = await rateLimit(`contact:${req.ip}`);
 if (limit > 10) {
-  return res.status(429).json({ error: 'Too many requests' });
+  return res.status(429).json({ error: "Too many requests" });
 }
 ```
 
@@ -269,13 +269,13 @@ curl -X POST https://yourproject.vercel.app/api/contact \
 
 ```typescript
 // From your frontend
-const response = await fetch('/api/contact', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
+const response = await fetch("/api/contact", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
-    name: 'Test',
-    mobileNumber: '+919876543210',
-    queryAbout: 'Buy Property',
+    name: "Test",
+    mobileNumber: "+919876543210",
+    queryAbout: "Buy Property",
   }),
 });
 
@@ -295,8 +295,8 @@ console.log(data);
 Available in API routes via `process.env`:
 
 ```typescript
-const mongoUri = process.env.MONGODB_URI;        // MongoDB connection
-const nodeEnv = process.env.NODE_ENV;            // development/production
+const mongoUri = process.env.MONGODB_URI; // MongoDB connection
+const nodeEnv = process.env.NODE_ENV; // development/production
 const allowedOrigins = process.env.ALLOWED_ORIGINS; // CORS whitelist
 ```
 
@@ -305,6 +305,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS; // CORS whitelist
 ### View API Logs
 
 In Vercel Dashboard:
+
 1. Go to Project
 2. Click "Deployments"
 3. Click latest deployment
@@ -328,6 +329,7 @@ curl http://localhost:3000/api/health
 **Cause**: IP not whitelisted in MongoDB Atlas
 
 **Fix**:
+
 - Go to MongoDB Atlas → Network Access
 - Add Vercel IP or 0.0.0.0/0
 
@@ -355,12 +357,12 @@ Vercel functions timeout after 60 seconds (Pro plan: 300s)
 
 ```typescript
 const withAuth = (handler: VercelApiHandler) => async (req, res) => {
-  const token = req.headers.authorization?.replace('Bearer ', '');
-  if (!token) return res.status(401).json({ error: 'Unauthorized' });
-  
+  const token = req.headers.authorization?.replace("Bearer ", "");
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
   const user = await verifyToken(token);
   (req as any).user = user;
-  
+
   return handler(req, res);
 };
 
@@ -373,12 +375,12 @@ export default withAuth(async (req, res) => {
 ### 2. File Uploads
 
 ```typescript
-import { formidable } from 'formidable';
+import { formidable } from "formidable";
 
 export default async (req, res) => {
   const form = formidable();
   const [fields, files] = await form.parse(req);
-  
+
   const uploadedFile = files.file?.[0];
   // Handle file upload
 };
@@ -397,12 +399,15 @@ export default async (req, res) => {
 ```
 
 In `vercel.json`:
+
 ```json
 {
-  "crons": [{
-    "path": "/api/cron/cleanup",
-    "schedule": "0 0 * * *"
-  }]
+  "crons": [
+    {
+      "path": "/api/cron/cleanup",
+      "schedule": "0 0 * * *"
+    }
+  ]
 }
 ```
 

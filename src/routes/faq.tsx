@@ -14,11 +14,13 @@ export const Route = createFileRoute("/faq")({
       { title: "Real Estate FAQ | Apna Ghar Consultants" },
       {
         name: "description",
-        content: "Frequently asked questions about buying, selling, and investing in properties. Expert answers about loans, site visits, and real estate in Kota & Jaipur.",
+        content:
+          "Frequently asked questions about buying, selling, and investing in properties. Expert answers about loans, site visits, and real estate in Kota & Jaipur.",
       },
       {
         name: "keywords",
-        content: "real estate FAQ, property questions, home loan FAQ, real estate advice, Kota, Jaipur",
+        content:
+          "real estate FAQ, property questions, home loan FAQ, real estate advice, Kota, Jaipur",
       },
       { property: "og:title", content: "Real Estate FAQ | Apna Ghar Consultants" },
       {
@@ -185,7 +187,10 @@ function Header() {
               </div>
             </div>
           </a>
-          <a href="/" className="flex items-center gap-2 text-sm font-medium text-foreground/70 hover:text-accent transition-colors">
+          <a
+            href="/"
+            className="flex items-center gap-2 text-sm font-medium text-foreground/70 hover:text-accent transition-colors"
+          >
             <ArrowLeft className="h-4 w-4" />
             <span className="hidden sm:inline">Back to Home</span>
           </a>
@@ -212,14 +217,11 @@ function FAQPage() {
                 <span className="text-accent"> Questions</span>
               </h1>
               <p className="mt-6 text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                Find comprehensive answers to common questions about buying, selling, investing, and all aspects of real estate with Apna Ghar Consultants.
+                Find comprehensive answers to common questions about buying, selling, investing, and
+                all aspects of real estate with Apna Ghar Consultants.
               </p>
               <div className="mt-8 flex gap-4 justify-center flex-wrap">
-                <Button
-                  size="lg"
-                  className="uppercase tracking-widest px-8"
-                  asChild
-                >
+                <Button size="lg" className="uppercase tracking-widest px-8" asChild>
                   <a href="#contact">Contact Us</a>
                 </Button>
                 <Button
@@ -270,14 +272,11 @@ function FAQPage() {
               Still Have Questions?
             </h2>
             <p className="text-lg text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-              Our expert team is ready to help you with any questions or concerns. Reach out to us today for a free consultation.
+              Our expert team is ready to help you with any questions or concerns. Reach out to us
+              today for a free consultation.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
-              <Button
-                size="lg"
-                variant="secondary"
-                className="uppercase tracking-widest px-8"
-              >
+              <Button size="lg" variant="secondary" className="uppercase tracking-widest px-8">
                 Call: +91 70149 30206
               </Button>
               <Button
@@ -304,24 +303,34 @@ function FAQPage() {
                 Consultants
               </div>
               <p className="mt-4 text-sm text-primary-foreground/70 leading-relaxed max-w-xs">
-                Your trusted partner in real estate since 2012 — connecting people with their dream homes across Rajasthan.
+                Your trusted partner in real estate since 2012 — connecting people with their dream
+                homes across Rajasthan.
               </p>
             </div>
             <div>
               <h4 className="font-serif text-lg font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <a href="/" className="text-primary-foreground/70 hover:text-gold transition-colors">
+                  <a
+                    href="/"
+                    className="text-primary-foreground/70 hover:text-gold transition-colors"
+                  >
                     Home
                   </a>
                 </li>
                 <li>
-                  <a href="/#faq" className="text-primary-foreground/70 hover:text-gold transition-colors">
+                  <a
+                    href="/#faq"
+                    className="text-primary-foreground/70 hover:text-gold transition-colors"
+                  >
                     FAQ Preview
                   </a>
                 </li>
                 <li>
-                  <a href="/#contact" className="text-primary-foreground/70 hover:text-gold transition-colors">
+                  <a
+                    href="/#contact"
+                    className="text-primary-foreground/70 hover:text-gold transition-colors"
+                  >
                     Contact Us
                   </a>
                 </li>

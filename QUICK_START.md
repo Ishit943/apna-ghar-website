@@ -9,28 +9,34 @@ Your website is now fully configured for Vercel deployment with backend included
 ## 🎯 3-Step Deployment
 
 ### Step 1: Test Locally (2 minutes)
+
 ```bash
 cd "d:\Apna Ghar Website\apna-dream-nest-main"
 npm install
 npm run dev
 ```
+
 - Visit http://localhost:5173
 - Fill contact form to test
 - Check browser console for any errors
 
 ### Step 2: Deploy to Vercel (5 minutes)
+
 ```bash
 git add .
 git commit -m "Configure for Vercel deployment"
 git push origin main
 ```
+
 Then go to https://vercel.com:
+
 1. Click "New Project"
 2. Select your GitHub repo
 3. Click "Deploy"
 4. Add environment variables when prompted
 
 ### Step 3: Configure Environment (5 minutes)
+
 In Vercel Dashboard, go to Settings → Environment Variables:
 
 ```
@@ -47,19 +53,20 @@ VITE_API_URL = /api
 
 ## 📋 Files to Know
 
-| File | What It Does | You Need To |
-|------|-------------|-----------|
-| `api/contact.ts` | Handles form submissions | ✅ Nothing - auto deployed |
-| `api/health.ts` | Health check endpoint | ✅ Nothing - auto deployed |
-| `.env.production` | Production config | ℹ️ Review (no secrets) |
-| `DEPLOYMENT_CHECKLIST.md` | Step-by-step guide | 📖 Read before deploying |
-| `VERCEL_DEPLOYMENT.md` | Full documentation | 📖 Reference if issues |
+| File                      | What It Does             | You Need To                |
+| ------------------------- | ------------------------ | -------------------------- |
+| `api/contact.ts`          | Handles form submissions | ✅ Nothing - auto deployed |
+| `api/health.ts`           | Health check endpoint    | ✅ Nothing - auto deployed |
+| `.env.production`         | Production config        | ℹ️ Review (no secrets)     |
+| `DEPLOYMENT_CHECKLIST.md` | Step-by-step guide       | 📖 Read before deploying   |
+| `VERCEL_DEPLOYMENT.md`    | Full documentation       | 📖 Reference if issues     |
 
 ---
 
 ## ✨ What Changed
 
 ### Before (Local + Render)
+
 ```
 Frontend (Localhost)  →  Hardcoded URL  →  Backend (Render.com)
                                        ↓
@@ -67,6 +74,7 @@ Frontend (Localhost)  →  Hardcoded URL  →  Backend (Render.com)
 ```
 
 ### After (Vercel Only)
+
 ```
 Vercel Project (Single Domain)
 ├─ Frontend + Backend
@@ -128,18 +136,19 @@ All in your project root:
 
 ## 🎓 Key Concepts
 
-| Term | Explanation |
-|------|-------------|
-| **Vercel Functions** | Serverless API endpoints (replaces your /server folder) |
-| **Environment Variables** | Secret values stored in Vercel (not in code) |
-| **Edge/CDN** | Your frontend served from locations near users (fast!) |
-| **Vercel Domains** | Free HTTPS + automatic SSL (https://yourproject.vercel.app) |
+| Term                      | Explanation                                                 |
+| ------------------------- | ----------------------------------------------------------- |
+| **Vercel Functions**      | Serverless API endpoints (replaces your /server folder)     |
+| **Environment Variables** | Secret values stored in Vercel (not in code)                |
+| **Edge/CDN**              | Your frontend served from locations near users (fast!)      |
+| **Vercel Domains**        | Free HTTPS + automatic SSL (https://yourproject.vercel.app) |
 
 ---
 
 ## 💰 Pricing
 
 **Your use case on Vercel Free Tier:**
+
 - ✅ Unlimited websites
 - ✅ 100GB bandwidth/month
 - ✅ 12 million function invocations/month
@@ -150,14 +159,14 @@ All in your project root:
 
 ## 📊 Deployment Comparison
 
-| Feature | Current (Render) | New (Vercel) |
-|---------|-----------------|------------|
-| Frontend | Locally | Global CDN |
-| Backend | Render.com | Vercel (same) |
-| Domain | apna-ghar-backend.onrender.com | yourproject.vercel.app |
-| Cost | ⚠️ Paid | ✅ Free |
-| Scaling | Manual | Auto |
-| Setup | Manual | 1-click |
+| Feature  | Current (Render)               | New (Vercel)           |
+| -------- | ------------------------------ | ---------------------- |
+| Frontend | Locally                        | Global CDN             |
+| Backend  | Render.com                     | Vercel (same)          |
+| Domain   | apna-ghar-backend.onrender.com | yourproject.vercel.app |
+| Cost     | ⚠️ Paid                        | ✅ Free                |
+| Scaling  | Manual                         | Auto                   |
+| Setup    | Manual                         | 1-click                |
 
 ---
 
@@ -178,11 +187,13 @@ All in your project root:
 ## 🚀 Next Actions
 
 ### TODAY:
+
 1. Read `DEPLOYMENT_CHECKLIST.md` (5 min)
 2. Deploy to Vercel (5 min)
 3. Test live site (2 min)
 
 ### AFTER DEPLOYMENT:
+
 1. Add custom domain (optional)
 2. Set up monitoring (optional)
 3. Monitor user feedback

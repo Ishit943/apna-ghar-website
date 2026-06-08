@@ -11,7 +11,8 @@ export const Route = createFileRoute("/emi-calculator")({
       { title: "Home Loan EMI Calculator | Apna Ghar Consultants" },
       {
         name: "description",
-        content: "Calculate your home loan EMI instantly with our advanced calculator. Plan your property purchase in Kota & Jaipur with accurate loan estimates.",
+        content:
+          "Calculate your home loan EMI instantly with our advanced calculator. Plan your property purchase in Kota & Jaipur with accurate loan estimates.",
       },
       {
         name: "keywords",
@@ -71,7 +72,7 @@ function formatCurrency(value: number): string {
 function calculateEMI(
   loanAmount: number,
   annualRate: number,
-  years: number
+  years: number,
 ): { emi: number; totalInterest: number; totalPayable: number } {
   if (loanAmount <= 0 || annualRate < 0 || years <= 0) {
     return { emi: 0, totalInterest: 0, totalPayable: 0 };
@@ -102,12 +103,9 @@ function EMICalculatorPage() {
   const [loanTenure, setLoanTenure] = useState(20);
   const [customLoanAmount, setCustomLoanAmount] = useState<number | null>(null);
 
-  const loanAmount = customLoanAmount !== null ? customLoanAmount : Math.max(0, propertyValue - downPayment);
-  const { emi, totalInterest, totalPayable } = calculateEMI(
-    loanAmount,
-    interestRate,
-    loanTenure
-  );
+  const loanAmount =
+    customLoanAmount !== null ? customLoanAmount : Math.max(0, propertyValue - downPayment);
+  const { emi, totalInterest, totalPayable } = calculateEMI(loanAmount, interestRate, loanTenure);
 
   const downPaymentPercent =
     propertyValue > 0 ? ((downPayment / propertyValue) * 100).toFixed(1) : "0";
@@ -169,7 +167,10 @@ function EMICalculatorPage() {
                         type="number"
                         value={propertyValue}
                         onChange={(e) => {
-                          const newValue = Math.max(100000, Math.min(50000000, Number(e.target.value) || 100000));
+                          const newValue = Math.max(
+                            100000,
+                            Math.min(50000000, Number(e.target.value) || 100000),
+                          );
                           setPropertyValue(newValue);
                           if (downPayment > newValue) {
                             setDownPayment(Math.floor(newValue * 0.2));
@@ -181,7 +182,9 @@ function EMICalculatorPage() {
                         className="text-lg font-semibold"
                         placeholder="Enter property value"
                       />
-                      <p className="text-xs text-muted-foreground mt-2">Range: ₹1 Lakh - ₹5 Crore</p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Range: ₹1 Lakh - ₹5 Crore
+                      </p>
                     </div>
 
                     {/* Down Payment */}
@@ -194,7 +197,10 @@ function EMICalculatorPage() {
                         type="number"
                         value={downPayment}
                         onChange={(e) => {
-                          const newValue = Math.max(0, Math.min(propertyValue, Number(e.target.value) || 0));
+                          const newValue = Math.max(
+                            0,
+                            Math.min(propertyValue, Number(e.target.value) || 0),
+                          );
                           setDownPayment(newValue);
                         }}
                         min={0}
@@ -203,7 +209,9 @@ function EMICalculatorPage() {
                         className="text-lg font-semibold"
                         placeholder="Enter down payment amount"
                       />
-                      <p className="text-xs text-muted-foreground mt-2">Max: {formatCurrency(propertyValue)}</p>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Max: {formatCurrency(propertyValue)}
+                      </p>
                     </div>
 
                     {/* Loan Amount */}
@@ -226,7 +234,9 @@ function EMICalculatorPage() {
                         placeholder="Leave empty to auto-calculate"
                       />
                       <p className="text-xs text-muted-foreground mt-2">
-                        {customLoanAmount !== null ? "Custom loan amount set" : `Auto-calculated: ${formatCurrency(loanAmount)}`}
+                        {customLoanAmount !== null
+                          ? "Custom loan amount set"
+                          : `Auto-calculated: ${formatCurrency(loanAmount)}`}
                       </p>
                       {customLoanAmount !== null && (
                         <Button
@@ -368,7 +378,10 @@ function EMICalculatorPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">
-                        Loan Amount {customLoanAmount !== null && <span className="text-accent font-medium">(Custom)</span>}
+                        Loan Amount{" "}
+                        {customLoanAmount !== null && (
+                          <span className="text-accent font-medium">(Custom)</span>
+                        )}
                       </span>
                       <span className="font-semibold text-accent">
                         {formatCurrency(loanAmount)}
@@ -485,22 +498,34 @@ function EMICalculatorPage() {
               <h4 className="font-serif text-lg font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <a href="/" className="text-primary-foreground/70 hover:text-gold transition-colors">
+                  <a
+                    href="/"
+                    className="text-primary-foreground/70 hover:text-gold transition-colors"
+                  >
                     Home
                   </a>
                 </li>
                 <li>
-                  <a href="/#faq" className="text-primary-foreground/70 hover:text-gold transition-colors">
+                  <a
+                    href="/#faq"
+                    className="text-primary-foreground/70 hover:text-gold transition-colors"
+                  >
                     FAQ
                   </a>
                 </li>
                 <li>
-                  <a href="/emi-calculator" className="text-primary-foreground/70 hover:text-gold transition-colors">
+                  <a
+                    href="/emi-calculator"
+                    className="text-primary-foreground/70 hover:text-gold transition-colors"
+                  >
                     EMI Calculator
                   </a>
                 </li>
                 <li>
-                  <a href="/#contact" className="text-primary-foreground/70 hover:text-gold transition-colors">
+                  <a
+                    href="/#contact"
+                    className="text-primary-foreground/70 hover:text-gold transition-colors"
+                  >
                     Contact Us
                   </a>
                 </li>

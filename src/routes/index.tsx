@@ -41,18 +41,26 @@ export const Route = createFileRoute("/")({
       },
       {
         name: "keywords",
-        content: "luxury real estate, properties Kota, properties Jaipur, villas, plots, apartments, home loans, real estate consultant",
+        content:
+          "luxury real estate, properties Kota, properties Jaipur, villas, plots, apartments, home loans, real estate consultant",
       },
-      { property: "og:title", content: "Apna Ghar Consultants | Luxury Real Estate in Kota & Jaipur" },
+      {
+        property: "og:title",
+        content: "Apna Ghar Consultants | Luxury Real Estate in Kota & Jaipur",
+      },
       {
         property: "og:description",
-        content: "Discover luxury properties, villas, plots & apartments in Kota & Jaipur with expert real estate consulting.",
+        content:
+          "Discover luxury properties, villas, plots & apartments in Kota & Jaipur with expert real estate consulting.",
       },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "https://picsum.photos/1200/630?random=1" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Apna Ghar Consultants | Luxury Real Estate" },
-      { name: "twitter:description", content: "Premium properties & real estate solutions in Kota & Jaipur" },
+      {
+        name: "twitter:description",
+        content: "Premium properties & real estate solutions in Kota & Jaipur",
+      },
       { name: "twitter:image", content: "https://picsum.photos/1200/630?random=1" },
     ],
   }),
@@ -66,6 +74,7 @@ const NAV = [
   { label: "Properties", href: "/properties" },
   { label: "FAQ", href: "#faq" },
   { label: "EMI Calculator", href: "/emi-calculator" },
+  { label: "List Property", href: "/list-property" },
   { label: "Brokerage", href: "#brokerage" },
   { label: "Contact us", href: "#contact" },
 ];
@@ -374,40 +383,32 @@ function Team() {
   );
 }
 
-const QUERY_OPTIONS = [
-  "Buy Property",
-  "Sell Property",
-  "Investment",
-  "Rent/Lease",
-  "Other",
-];
+const QUERY_OPTIONS = ["Buy Property", "Sell Property", "Investment", "Rent/Lease", "Other"];
 
 function ContactSection() {
   const [form, setForm] = useState({ name: "", mobile: "", query: "Buy Property" });
 
- const handleSubmit = async (e: FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
 
-  // Validation
-  if (!form.name.trim() || !form.mobile.trim()) {
-    toast.error("Please fill in your name and mobile number.");
-    return;
-  }
+    // Validation
+    if (!form.name.trim() || !form.mobile.trim()) {
+      toast.error("Please fill in your name and mobile number.");
+      return;
+    }
 
-  if (!/^[0-9+\-\s]{7,15}$/.test(form.mobile)) {
-    toast.error("Please enter a valid mobile number.");
-    return;
-  }
+    if (!/^[0-9+\-\s]{7,15}$/.test(form.mobile)) {
+      toast.error("Please enter a valid mobile number.");
+      return;
+    }
 
-  try {
-    // Get API URL from environment variable
-    const apiUrl = import.meta.env.VITE_API_URL || '/api';
-    const contactEndpoint = `${apiUrl}/contact`;
+    try {
+      // Get API URL from environment variable
+      const apiUrl = import.meta.env.VITE_API_URL || "/api";
+      const contactEndpoint = `${apiUrl}/contact`;
 
-    // Send form data to backend
-    const response = await fetch(
-      contactEndpoint,
-      {
+      // Send form data to backend
+      const response = await fetch(contactEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -417,32 +418,27 @@ function ContactSection() {
           mobileNumber: form.mobile,
           queryAbout: form.query,
         }),
-      }
-    );
-
-    const data = await response.json();
-
-    if (data.success) {
-      toast.success(
-        "Thank you! Our team will contact you shortly."
-      );
-
-      // Reset form
-      setForm({
-        name: "",
-        mobile: "",
-        query: "Buy Property",
       });
-    } else {
-      toast.error(
-        data.message || "Something went wrong. Please try again."
-      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success("Thank you! Our team will contact you shortly.");
+
+        // Reset form
+        setForm({
+          name: "",
+          mobile: "",
+          query: "Buy Property",
+        });
+      } else {
+        toast.error(data.message || "Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Backend connection failed. Please try again later.");
     }
-  } catch (error) {
-    console.error(error);
-    toast.error("Backend connection failed. Please try again later.");
-  }
-};
+  };
   const handleClear = () => setForm({ name: "", mobile: "", query: "Buy Property" });
 
   return (
@@ -532,7 +528,9 @@ function ContactSection() {
             <div className="mt-2 h-[2px] w-12 bg-accent mb-6" />
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label htmlFor="name" className="block font-medium text-foreground mb-2">Name *</Label>
+                <Label htmlFor="name" className="block font-medium text-foreground mb-2">
+                  Name *
+                </Label>
                 <Input
                   id="name"
                   value={form.name}
@@ -544,7 +542,9 @@ function ContactSection() {
                 />
               </div>
               <div>
-                <Label htmlFor="mobile" className="block font-medium text-foreground mb-2">Mobile Number *</Label>
+                <Label htmlFor="mobile" className="block font-medium text-foreground mb-2">
+                  Mobile Number *
+                </Label>
                 <Input
                   id="mobile"
                   type="tel"
@@ -575,7 +575,10 @@ function ContactSection() {
                 </RadioGroup>
               </div>
               <div className="flex gap-3 pt-4">
-                <Button type="submit" className="flex-1 uppercase tracking-wider transition-all duration-200 bg-accent hover:bg-accent/90">
+                <Button
+                  type="submit"
+                  className="flex-1 uppercase tracking-wider transition-all duration-200 bg-accent hover:bg-accent/90"
+                >
                   Submit
                 </Button>
                 <Button
@@ -661,7 +664,8 @@ function PremiumCTA() {
             Find Your Dream Property Today
           </h2>
           <p className="text-base sm:text-lg text-foreground/70 max-w-3xl mx-auto leading-relaxed">
-            Get expert guidance for buying, selling, investment and premium real estate opportunities in Kota & Jaipur.
+            Get expert guidance for buying, selling, investment and premium real estate
+            opportunities in Kota & Jaipur.
           </p>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -672,15 +676,23 @@ function PremiumCTA() {
             </Button>
           </a>
           <a href="#contact" className="flex-1 sm:flex-initial">
-            <Button size="lg" variant="outline" className="w-full sm:w-auto border-gold/50 hover:bg-gold/10">
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full sm:w-auto border-gold/50 hover:bg-gold/10"
+            >
               <Phone className="h-5 w-5 mr-2" />
               Contact Us
             </Button>
           </a>
-          <a href="/properties" className="flex-1 sm:flex-initial">
-            <Button size="lg" variant="outline" className="w-full sm:w-auto border-gold/50 hover:bg-gold/10">
+          <a href="/list-property" className="flex-1 sm:flex-initial">
+            <Button
+              size="lg"
+              variant="outline"
+              className="w-full sm:w-auto border-gold/50 hover:bg-gold/10"
+            >
               <Megaphone className="h-5 w-5 mr-2" />
-              Browse Properties
+              List Your Property
             </Button>
           </a>
         </div>
@@ -740,13 +752,21 @@ function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-gold" />
-                <a href="mailto:ApnaGharConsultants2012@gmail.com" className="hover:text-gold transition-colors truncate">
+                <a
+                  href="mailto:ApnaGharConsultants2012@gmail.com"
+                  className="hover:text-gold transition-colors truncate"
+                >
                   info@apnaghar.com
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <MessageSquare className="h-4 w-4 text-gold" />
-                <a href="https://wa.me/917014930206" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors">
+                <a
+                  href="https://wa.me/917014930206"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-gold transition-colors"
+                >
                   WhatsApp Us
                 </a>
               </li>

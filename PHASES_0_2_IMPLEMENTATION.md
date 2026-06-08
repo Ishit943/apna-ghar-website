@@ -1,6 +1,7 @@
 # Phases 0-2 Implementation Summary
 
 ## Overview
+
 This document summarizes all changes implemented for Phases 0, 1, and 2 of the Apna Ghar website roadmap.
 
 ---
@@ -8,6 +9,7 @@ This document summarizes all changes implemented for Phases 0, 1, and 2 of the A
 ## Phase 0: Fix Vercel Deployment ✅
 
 ### Changes Made:
+
 1. **Created vercel.json** (`vercel.json`)
    - Corrected `outputDirectory` to `dist/client`
    - Fixed rewrite rules to properly handle SPA routing
@@ -18,12 +20,14 @@ This document summarizes all changes implemented for Phases 0, 1, and 2 of the A
    - Deleted `api/[[...index]].ts` (broken SSR catch-all that referenced non-existent dist/server/server.js)
 
 ### What You Still Need To Do (Manual Steps):
+
 1. Go to Vercel Dashboard → Project Settings → General
 2. Set **Output Directory** to `dist/client`
 3. Go to Vercel Dashboard → Settings → Environment Variables
 4. Add `MONGODB_URI` with your MongoDB Atlas connection string
 
 ### Result:
+
 The website will no longer show 404 errors after deployment.
 
 ---
@@ -31,6 +35,7 @@ The website will no longer show 404 errors after deployment.
 ## Phase 1: Real Authentication System ✅
 
 ### Dependencies Installed:
+
 - `bcryptjs` (password hashing)
 - `jsonwebtoken` (JWT tokens)
 - `cookie-parser` (HTTP-only cookie handling)
@@ -38,26 +43,31 @@ The website will no longer show 404 errors after deployment.
 ### Backend Changes:
 
 #### 1. User Model (`server/models/User.js`)
+
 - Fields: name, email, passwordHash (bcrypted), role (admin|team_member), isActive, lastLogin, phone
 - Methods: `comparePassword()` for authentication
 - Pre-save hook: automatically hashes passwords with bcryptjs
 
 #### 2. Auth Utilities (`server/utils/auth.js`)
+
 - `generateToken()` - Creates JWT with 24h expiration
 - `verifyToken()` - Validates JWT signatures
 - `authMiddleware` - Express middleware for protected routes
 - `authorize()` - Role-based access control middleware
 
 #### 3. Auth Routes (`server/routes/authRoutes.js`)
+
 - `POST /api/auth/login` - Validates credentials, returns JWT + httpOnly cookie
 - `GET /api/auth/me` - Gets current user profile (requires auth)
 - `POST /api/auth/logout` - Clears auth cookie
 
 #### 4. Server Updates (`server/server.js`)
+
 - Added `cookie-parser` middleware
 - Registered auth routes
 
 #### 5. Vercel Serverless Auth Endpoints:
+
 - `api/auth/login.ts` - Login endpoint for Vercel Functions
 - `api/auth/me.ts` - Current user profile endpoint
 - `api/auth/logout.ts` - Logout endpoint
@@ -65,6 +75,7 @@ The website will no longer show 404 errors after deployment.
 ### Frontend Changes:
 
 #### Updated Auth Context (`src/contexts/auth-context.tsx`)
+
 - **REMOVED**: localStorage-based fake auth
 - **ADDED**: Real API calls to backend
 - **ADDED**: httpOnly cookie handling
@@ -72,6 +83,7 @@ The website will no longer show 404 errors after deployment.
 - **NEW**: Auto-authentication on app mount (checks if user still logged in)
 
 ### Security Improvements:
+
 ✅ Passwords are bcrypt-hashed (never stored plain text)
 ✅ JWTs are httpOnly cookies (protected from XSS)
 ✅ Tokens expire after 24 hours
@@ -85,44 +97,54 @@ The website will no longer show 404 errors after deployment.
 ### Backend Changes:
 
 #### 1. Property Model (`server/models/Property.js`)
+
 - Fields: title, location, type, price, description, sqft, beds, baths, images, status, isFeatured, views, createdBy (User ref)
 - Text index on title, location, description (for search)
 - Status enum: active | sold | pending
 - View counter for tracking property popularity
 
 #### 2. Property Routes (`server/routes/propertyRoutes.js`)
+
 **GET /api/properties**
+
 - Public endpoint with search, filter, pagination
 - Query params: `search`, `type`, `minPrice`, `maxPrice`, `location`, `page`, `limit`
 - Returns paginated results
 
 **GET /api/properties/:id**
+
 - Increments view counter
 - Returns full property details
 
 **POST /api/properties**
+
 - Auth required (admin | team_member)
 - Creates new property
 
 **PUT /api/properties/:id**
+
 - Auth required (admin | team_member)
 - Updates property fields
 
 **DELETE /api/properties/:id**
+
 - Auth required
 - Admin: hard delete
 - Team member: soft delete (marks as pending)
 
 #### 3. Vercel Serverless Property Endpoints:
+
 - `api/properties/index.ts` - List & search properties
 - `api/properties/[id].ts` - Get single property
 
 #### 4. Server Integration (`server/server.js`)
+
 - Registered property routes
 
 ### Frontend Changes:
 
 #### Updated Properties Context (`src/contexts/properties-context.tsx`)
+
 - **REMOVED**: localStorage storage
 - **ADDED**: TanStack Query (React Query) hooks
 - **ADDED**: Real API calls to backend
@@ -134,12 +156,14 @@ The website will no longer show 404 errors after deployment.
 ### Data Validation:
 
 #### Created Zod Schemas (`src/lib/schemas.ts`)
+
 - `loginSchema` - Email + password validation
 - `registerSchema` - Name + secure password validation
 - `propertySchema` - All property fields with type validation
 - `contactSchema` - Contact form with phone validation (Indian format: 10 digits, starts with 6-9)
 
 ### API Endpoints Summary:
+
 ```
 Authentication:
   POST   /api/auth/login
@@ -159,6 +183,7 @@ Properties:
 ## Database Collections Required
 
 ### Users Collection
+
 ```javascript
 {
   _id: ObjectId,
@@ -175,6 +200,7 @@ Properties:
 ```
 
 ### Properties Collection
+
 ```javascript
 {
   _id: ObjectId,
@@ -201,17 +227,20 @@ Properties:
 ## Next Steps (Phase 3 & Beyond)
 
 ### Phase 3: Admin & Team Member Panels
+
 - [ ] Create admin dashboard with stats
 - [ ] Team member management UI
 - [ ] Contact submissions display
 
 ### Phase 4: Contact Form Pipeline
+
 - [ ] Email notifications (Nodemailer/Resend)
 - [ ] Phone validation (10-digit Indian numbers)
 - [ ] CSV export functionality
 - [ ] CAPTCHA integration
 
 ### Phase 5: Backend Security
+
 - [ ] Rate limiting
 - [ ] Input sanitization
 - [ ] Security headers
@@ -222,6 +251,7 @@ Properties:
 ## Important: Environment Variables
 
 Add these to **Vercel Environment Variables**:
+
 ```
 MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/apna-ghar
 JWT_SECRET=your-super-secret-key-change-this
@@ -291,6 +321,7 @@ apna-dream-nest-main/
 ---
 
 ## Completed ✅
+
 - Phase 0: Vercel 404 fix
 - Phase 1: JWT authentication system
 - Phase 2: MongoDB properties backend

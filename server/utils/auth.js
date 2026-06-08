@@ -2,20 +2,15 @@ import jwt from "jsonwebtoken";
 
 // Generate JWT token
 export const generateToken = (userId, role) => {
-  return jwt.sign(
-    { userId, role },
-    process.env.JWT_SECRET || "your-secret-key-change-this",
-    { expiresIn: "24h" }
-  );
+  return jwt.sign({ userId, role }, process.env.JWT_SECRET || "your-secret-key-change-this", {
+    expiresIn: "24h",
+  });
 };
 
 // Verify JWT token
 export const verifyToken = (token) => {
   try {
-    return jwt.verify(
-      token,
-      process.env.JWT_SECRET || "your-secret-key-change-this"
-    );
+    return jwt.verify(token, process.env.JWT_SECRET || "your-secret-key-change-this");
   } catch (error) {
     return null;
   }
@@ -25,9 +20,7 @@ export const verifyToken = (token) => {
 export const authMiddleware = (req, res, next) => {
   try {
     // Get token from cookies or Authorization header
-    let token =
-      req.cookies?.authToken ||
-      req.headers.authorization?.split(" ")[1];
+    let token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({

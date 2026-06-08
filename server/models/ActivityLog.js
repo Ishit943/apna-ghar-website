@@ -38,7 +38,7 @@ const activityLogSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Index for efficient querying
@@ -46,9 +46,6 @@ activityLogSchema.index({ userId: 1, createdAt: -1 });
 activityLogSchema.index({ action: 1, createdAt: -1 });
 activityLogSchema.index({ createdAt: 1 });
 
-const ActivityLog = mongoose.model(
-  "ActivityLog",
-  activityLogSchema
-);
+const ActivityLog = mongoose.model("ActivityLog", activityLogSchema);
 
 export default ActivityLog;

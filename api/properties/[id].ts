@@ -1,9 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import mongoose from "mongoose";
 
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  "mongodb://localhost:27017/apna-ghar";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/apna-ghar";
 
 // Property Schema
 const propertySchema = new mongoose.Schema(
@@ -25,34 +23,23 @@ const propertySchema = new mongoose.Schema(
       ref: "User",
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Property =
-  mongoose.models.Property ||
-  mongoose.model("Property", propertySchema);
+const Property = mongoose.models.Property || mongoose.model("Property", propertySchema);
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS headers
   const origin = req.headers.origin;
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim());
-if (origin && allowedOrigins.includes(origin)) {
-  res.setHeader("Access-Control-Allow-Origin", origin);
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-} else if (allowedOrigins.includes("*")) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-}
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, OPTIONS"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type"
-  );
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((o) => o.trim());
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+  } else if (allowedOrigins.includes("*")) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
@@ -76,15 +63,11 @@ if (origin && allowedOrigins.includes(origin)) {
     }
 
     // Connect to MongoDB
-    if (
-      mongoose.connection.readyState === 0
-    ) {
+    if (mongoose.connection.readyState === 0) {
       await mongoose.connect(MONGODB_URI);
     }
 
-    const property = await Property.findById(
-      id
-    ).populate("createdBy", "name email");
+    const property = await Property.findById(id).populate("createdBy", "name email");
 
     if (!property) {
       return res.status(404).json({

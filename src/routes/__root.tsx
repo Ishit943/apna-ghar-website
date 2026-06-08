@@ -17,9 +17,7 @@ function NotFoundComponent() {
       <div className="max-w-md w-full text-center">
         {/* Logo */}
         <div className="mb-8">
-          <h1 className="text-lg font-serif font-bold tracking-widest text-foreground mb-1">
-            AG
-          </h1>
+          <h1 className="text-lg font-serif font-bold tracking-widest text-foreground mb-1">AG</h1>
           <p className="text-xs uppercase tracking-widest text-muted-foreground">
             Apna Ghar Consultants
           </p>
@@ -37,7 +35,7 @@ function NotFoundComponent() {
 
         {/* Description */}
         <p className="text-sm text-muted-foreground leading-relaxed mb-8">
-          The property you're looking for doesn't exist or may have been removed from our catalog. 
+          The property you're looking for doesn't exist or may have been removed from our catalog.
           Don't worry, explore our collection or contact our team for assistance.
         </p>
 
@@ -59,7 +57,11 @@ function NotFoundComponent() {
 
         {/* Footer Help Text */}
         <p className="text-xs text-muted-foreground mt-8">
-          Need help? <a href="/#contact" className="text-accent hover:underline">Contact us</a> for assistance
+          Need help?{" "}
+          <a href="/#contact" className="text-accent hover:underline">
+            Contact us
+          </a>{" "}
+          for assistance
         </p>
       </div>
     </div>
@@ -107,14 +109,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "title", content: "Apna Ghar Consultants | Luxury Real Estate in Kota & Jaipur" },
-      { name: "description", content: "Luxury real estate consulting, property sales & purchases, home loans, and expert brokerage in Kota & Jaipur." },
-      { name: "keywords", content: "real estate, luxury properties, Kota, Jaipur, home loans, consultancy" },
+      {
+        name: "description",
+        content:
+          "Luxury real estate consulting, property sales & purchases, home loans, and expert brokerage in Kota & Jaipur.",
+      },
+      {
+        name: "keywords",
+        content: "real estate, luxury properties, Kota, Jaipur, home loans, consultancy",
+      },
       { name: "author", content: "Apna Ghar Consultants" },
       { name: "theme-color", content: "#000000" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black" },
       { property: "og:title", content: "Apna Ghar Consultants | Luxury Real Estate" },
-      { property: "og:description", content: "Premium properties, expert consulting, and financing solutions in Kota & Jaipur" },
+      {
+        property: "og:description",
+        content: "Premium properties, expert consulting, and financing solutions in Kota & Jaipur",
+      },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "en_IN" },
       { property: "og:image", content: "https://picsum.photos/1200/630?random=1" },

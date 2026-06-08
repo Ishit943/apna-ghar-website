@@ -55,26 +55,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    try {
-      const response = await fetch(`${API_BASE}/api/auth/login`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+    const response = await fetch(`${API_BASE}/api/auth/login`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Login failed");
-      }
-
-      setUser(data.user);
-    } catch (error) {
-      throw error;
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Login failed");
     }
+
+    setUser(data.user);
   };
 
   const logout = async () => {
@@ -95,23 +91,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const addTeamMember = async (name: string, email: string, password: string) => {
-    try {
-      const response = await fetch(`${API_BASE}/api/admin/team`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
+    const response = await fetch(`${API_BASE}/api/admin/team`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Failed to add team member");
-      }
-    } catch (error) {
-      throw error;
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Failed to add team member");
     }
   };
 

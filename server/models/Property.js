@@ -14,13 +14,7 @@ const propertySchema = new mongoose.Schema(
     },
     type: {
       type: String,
-      enum: [
-        "apartment",
-        "house",
-        "villa",
-        "plot",
-        "commercial",
-      ],
+      enum: ["apartment", "house", "villa", "plot", "commercial"],
       required: [true, "Please specify property type"],
     },
     price: {
@@ -34,10 +28,7 @@ const propertySchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [
-        true,
-        "Please provide a description",
-      ],
+      required: [true, "Please provide a description"],
       trim: true,
     },
     sqft: {
@@ -91,7 +82,7 @@ const propertySchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Create text index for search
@@ -108,9 +99,6 @@ propertySchema.index({
 propertySchema.index({ isFeatured: 1 });
 propertySchema.index({ views: -1 });
 
-const Property = mongoose.model(
-  "Property",
-  propertySchema
-);
+const Property = mongoose.model("Property", propertySchema);
 
 export default Property;

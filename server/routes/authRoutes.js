@@ -1,10 +1,7 @@
 import express from "express";
 import User from "../models/User.js";
 import RefreshToken from "../models/RefreshToken.js";
-import {
-  generateToken,
-  authMiddleware,
-} from "../utils/auth.js";
+import { generateToken, authMiddleware } from "../utils/auth.js";
 import crypto from "crypto";
 
 const router = express.Router();
@@ -18,8 +15,7 @@ router.post("/login", async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message:
-          "Please provide email and password",
+        message: "Please provide email and password",
       });
     }
 
@@ -44,9 +40,7 @@ router.post("/login", async (req, res) => {
     }
 
     // Compare passwords
-    const isMatch = await user.comparePassword(
-      password
-    );
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({
         success: false,
@@ -64,8 +58,7 @@ router.post("/login", async (req, res) => {
     // Set httpOnly cookie
     res.cookie("authToken", token, {
       httpOnly: true,
-      secure:
-        process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     });
@@ -127,8 +120,7 @@ router.get("/me", authMiddleware, async (req, res) => {
 router.post("/logout", (req, res) => {
   res.clearCookie("authToken", {
     httpOnly: true,
-    secure:
-      process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
 
@@ -141,9 +133,7 @@ router.post("/logout", (req, res) => {
 // Refresh token endpoint
 router.post("/refresh", async (req, res) => {
   try {
-    const token =
-      req.cookies?.refreshToken ||
-      req.headers.authorization?.split(" ")[1];
+    const token = req.cookies?.refreshToken || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({
@@ -152,30 +142,22 @@ router.post("/refresh", async (req, res) => {
       });
     }
 
-    const refreshTokenDoc =
-      await RefreshToken.findOne({
-        token,
-      }).populate("userId");
+    const refreshTokenDoc = await RefreshToken.findOne({
+      token,
+    }).populate("userId");
 
-    if (
-      !refreshTokenDoc ||
-      refreshTokenDoc.expiresAt < new Date()
-    ) {
+    if (!refreshTokenDoc || refreshTokenDoc.expiresAt < new Date()) {
       return res.status(401).json({
         success: false,
         message: "Refresh token expired or invalid",
       });
     }
 
-    const newAccessToken = generateToken(
-      refreshTokenDoc.userId._id,
-      refreshTokenDoc.userId.role
-    );
+    const newAccessToken = generateToken(refreshTokenDoc.userId._id, refreshTokenDoc.userId.role);
 
     res.cookie("authToken", newAccessToken, {
       httpOnly: true,
-      secure:
-        process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 24 * 60 * 60 * 1000,
     });
@@ -195,70 +177,55 @@ router.post("/refresh", async (req, res) => {
 });
 
 // Change password endpoint
-router.post(
-  "/change-password",
-  authMiddleware,
-  async (req, res) => {
-    try {
-      const { currentPassword, newPassword } =
-        req.body;
+router.post("/change-password", authMiddleware, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
 
-      if (!currentPassword || !newPassword) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "Current and new passwords are required",
-        });
-      }
-
-      if (newPassword.length < 6) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "New password must be at least 6 characters",
-        });
-      }
-
-      const user = await User.findById(
-        req.user.userId
-      ).select("+passwordHash");
-
-      if (!user) {
-        return res.status(404).json({
-          success: false,
-          message: "User not found",
-        });
-      }
-
-      const isMatch = await user.comparePassword(
-        currentPassword
-      );
-      if (!isMatch) {
-        return res.status(401).json({
-          success: false,
-          message: "Current password is incorrect",
-        });
-      }
-
-      user.passwordHash = newPassword;
-      await user.save();
-
-      res.json({
-        success: true,
-        message:
-          "Password changed successfully",
-      });
-    } catch (error) {
-      console.error(
-        "Change password error:",
-        error
-      );
-      res.status(500).json({
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
         success: false,
-        message: "Server error",
+        message: "Current and new passwords are required",
       });
     }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: "New password must be at least 6 characters",
+      });
+    }
+
+    const user = await User.findById(req.user.userId).select("+passwordHash");
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        message: "Current password is incorrect",
+      });
+    }
+
+    user.passwordHash = newPassword;
+    await user.save();
+
+    res.json({
+      success: true,
+      message: "Password changed successfully",
+    });
+  } catch (error) {
+    console.error("Change password error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
   }
-);
+});
 
 export default router;

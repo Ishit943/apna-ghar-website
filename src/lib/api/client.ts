@@ -11,27 +11,27 @@
  */
 export const getApiBaseUrl = (): string => {
   const viteApiUrl = import.meta.env.VITE_API_URL;
-  
+
   if (viteApiUrl) {
     return viteApiUrl;
   }
 
   // Default to relative path for Vercel deployment
-  return '/api';
+  return "/api";
 };
 
 /**
  * Generic fetch wrapper with error handling
  */
-export const apiCall = async <T = any>(
+export const apiCall = async <T = Record<string, unknown>>(
   endpoint: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<T> => {
   const baseUrl = getApiBaseUrl();
-  const url = `${baseUrl}${endpoint.startsWith('/') ? endpoint : '/' + endpoint}`;
+  const url = `${baseUrl}${endpoint.startsWith("/") ? endpoint : "/" + endpoint}`;
 
   const defaultHeaders: HeadersInit = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   };
 
   const response = await fetch(url, {
@@ -57,8 +57,8 @@ export const submitContactForm = async (data: {
   mobileNumber: string;
   queryAbout: string;
 }) => {
-  return apiCall('/contact', {
-    method: 'POST',
+  return apiCall("/contact", {
+    method: "POST",
     body: JSON.stringify(data),
   });
 };

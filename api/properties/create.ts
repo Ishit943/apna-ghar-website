@@ -2,9 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  "mongodb://localhost:27017/apna-ghar";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/apna-ghar";
 
 // User Schema
 const userSchema = new mongoose.Schema(
@@ -17,12 +15,10 @@ const userSchema = new mongoose.Schema(
     lastLogin: Date,
     phone: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const User =
-  mongoose.models.User ||
-  mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 // Property Schema
 const propertySchema = new mongoose.Schema(
@@ -53,25 +49,23 @@ const propertySchema = new mongoose.Schema(
     },
     deletedAt: Date,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const Property =
-  mongoose.models.Property ||
-  mongoose.model("Property", propertySchema);
+const Property = mongoose.models.Property || mongoose.model("Property", propertySchema);
 
 // Helper function to set CORS headers
 const setCorsHeaders = (req: VercelRequest, res: VercelResponse) => {
   const origin = req.headers.origin;
-  const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim());
-  
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((o) => o.trim());
+
   if (origin && allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Credentials", "true");
   } else if (allowedOrigins.includes("*")) {
     res.setHeader("Access-Control-Allow-Origin", "*");
   }
-  
+
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 };
@@ -79,20 +73,13 @@ const setCorsHeaders = (req: VercelRequest, res: VercelResponse) => {
 // Helper function to verify JWT token
 const verifyToken = (token: string) => {
   try {
-    return jwt.verify(
-      token,
-      process.env.JWT_SECRET ||
-        "your-secret-key-change-this"
-    );
+    return jwt.verify(token, process.env.JWT_SECRET || "your-secret-key-change-this");
   } catch (error) {
     return null;
   }
 };
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   setCorsHeaders(req, res);
 
@@ -109,16 +96,12 @@ export default async function handler(
 
   try {
     // Connect to MongoDB
-    if (
-      mongoose.connection.readyState === 0
-    ) {
+    if (mongoose.connection.readyState === 0) {
       await mongoose.connect(MONGODB_URI);
     }
 
     // Verify authentication
-    const token =
-      req.cookies?.authToken ||
-      req.headers.authorization?.split(" ")[1];
+    const token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({
@@ -145,25 +128,14 @@ export default async function handler(
     }
 
     // Extract property data
-    const {
-      title,
-      location,
-      type,
-      price,
-      description,
-      sqft,
-      beds,
-      baths,
-      images,
-      isFeatured,
-    } = req.body;
+    const { title, location, type, price, description, sqft, beds, baths, images, isFeatured } =
+      req.body;
 
     // Validation
     if (!title || !location || !type || !price) {
       return res.status(400).json({
         success: false,
-        message:
-          "Title, location, type, and price are required",
+        message: "Title, location, type, and price are required",
       });
     }
 

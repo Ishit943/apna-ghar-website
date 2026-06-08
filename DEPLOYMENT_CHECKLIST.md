@@ -75,6 +75,7 @@ If deployment fails:
 ## Rollback (if needed)
 
 In Vercel Dashboard:
+
 1. Go to Deployments
 2. Find previous working deployment
 3. Click "Redeploy" button

@@ -7,6 +7,7 @@ After code implementation is complete, you must perform these manual configurati
 ## 🔧 Step 1: Vercel Dashboard Configuration (5 minutes)
 
 ### 1.1 Set Output Directory
+
 1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
 2. Select your "apna-ghar" project
 3. Navigate to **Settings → General**
@@ -17,15 +18,17 @@ After code implementation is complete, you must perform these manual configurati
 ✅ This tells Vercel where the built client code is located.
 
 ### 1.2 Add Environment Variables
+
 1. Go to **Settings → Environment Variables**
 2. Add the following variables for **Production, Preview, and Development**:
 
-| Variable | Value | Example |
-|----------|-------|---------|
-| `MONGODB_URI` | MongoDB Atlas connection string | `mongodb+srv://user:pass@cluster.mongodb.net/apna-ghar?retryWrites=true&w=majority` |
-| `JWT_SECRET` | A secure random string (min 32 chars) | Use `openssl rand -hex 32` to generate |
+| Variable      | Value                                 | Example                                                                             |
+| ------------- | ------------------------------------- | ----------------------------------------------------------------------------------- |
+| `MONGODB_URI` | MongoDB Atlas connection string       | `mongodb+srv://user:pass@cluster.mongodb.net/apna-ghar?retryWrites=true&w=majority` |
+| `JWT_SECRET`  | A secure random string (min 32 chars) | Use `openssl rand -hex 32` to generate                                              |
 
 **How to generate JWT_SECRET securely:**
+
 ```bash
 # On macOS/Linux
 openssl rand -hex 32
@@ -41,6 +44,7 @@ openssl rand -hex 32
 ## 🔐 Step 2: MongoDB Setup (10 minutes)
 
 ### 2.1 Create Database Collections
+
 1. Go to [MongoDB Atlas](https://cloud.mongodb.com)
 2. Select your cluster → Collections
 3. Create database: `apna-ghar`
@@ -73,16 +77,18 @@ Use MongoDB Atlas → Collection → Insert Document:
 **To generate bcrypt hash locally:**
 
 Create a temporary Node.js file:
-```javascript
-import bcryptjs from 'bcryptjs';
 
-const password = 'YourSecurePassword123';
+```javascript
+import bcryptjs from "bcryptjs";
+
+const password = "YourSecurePassword123";
 const salt = await bcryptjs.genSalt(10);
 const hash = await bcryptjs.hash(password, salt);
-console.log('Hashed password:', hash);
+console.log("Hashed password:", hash);
 ```
 
 Then:
+
 ```bash
 cd apna-dream-nest-main
 node -e "import('bcryptjs').then(b => b.default.hash('YourSecurePassword123', 10)).then(h => console.log(h))"
@@ -91,6 +97,7 @@ node -e "import('bcryptjs').then(b => b.default.hash('YourSecurePassword123', 10
 Or use an [online bcrypt generator](https://bcrypt-generator.com/) temporarily (then delete the history).
 
 ✅ Default admin user created with credentials:
+
 - Email: `admin@apna-ghar.com`
 - Password: Your chosen password
 
@@ -136,6 +143,7 @@ git push
 ```
 
 Vercel should automatically deploy. Check:
+
 1. [Vercel Dashboard](https://vercel.com) → Deployments tab
 2. Wait for deployment to complete (usually 2-5 minutes)
 3. Visit your deployed URL
@@ -143,6 +151,7 @@ Vercel should automatically deploy. Check:
 ### 3.3 Test Endpoints
 
 **Public endpoints (no auth needed):**
+
 ```bash
 # Get properties
 curl https://your-domain.vercel.app/api/properties
@@ -162,6 +171,7 @@ curl -X POST https://your-domain.vercel.app/api/contact \
 ```
 
 **Authenticated endpoints:**
+
 ```bash
 # Login (get JWT token)
 curl -X POST https://your-domain.vercel.app/api/auth/login \
@@ -222,25 +232,30 @@ Before going live, verify:
 ## 🆘 Troubleshooting
 
 ### "Cannot find module" errors on Vercel
+
 - ✅ FIXED: Deleted api/[[...index]].ts
 - The catch-all handler was trying to import dist/server/server.js which doesn't exist on Vercel
 
 ### "MONGODB_URI is undefined"
+
 - [ ] Go to Vercel Dashboard → Settings → Environment Variables
 - [ ] Add MONGODB_URI for Production, Preview, and Development
 - [ ] Redeploy project
 
 ### "JWT verification failed"
+
 - [ ] Verify JWT_SECRET is set in Vercel Environment Variables
 - [ ] Check that JWT_SECRET is the same across all environments
 - [ ] Redeploy after adding JWT_SECRET
 
 ### "Connection timeout to MongoDB"
+
 - [ ] Verify MongoDB connection string is correct
 - [ ] Check MongoDB Atlas → Network Access → Allow All IPs (0.0.0.0/0)
 - [ ] Verify database name is `apna-ghar`
 
 ### "Property images not displaying"
+
 - [ ] Wait for Phase 2 completion (Cloudinary integration)
 - [ ] Currently, Property.images[] accepts URLs but you need upload functionality
 
@@ -249,6 +264,7 @@ Before going live, verify:
 ## 📞 Need Help?
 
 Refer to these documentation files:
+
 - [PHASES_0_2_VERIFICATION.md](PHASES_0_2_VERIFICATION.md) - Detailed implementation status
 - [API_DEVELOPMENT_GUIDE.md](API_DEVELOPMENT_GUIDE.md) - API endpoint reference
 - [QUICK_START.md](QUICK_START.md) - Quick setup guide

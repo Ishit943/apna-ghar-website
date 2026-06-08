@@ -3,6 +3,7 @@
 ## Step 1: Create MongoDB Collections
 
 ### Option A: Using MongoDB Compass (GUI)
+
 1. Connect to your MongoDB Atlas cluster
 2. Create a database called `apna-ghar`
 3. Create these collections:
@@ -11,6 +12,7 @@
    - `contacts`
 
 ### Option B: Using MongoDB CLI
+
 ```bash
 db.createCollection("users")
 db.createCollection("properties")
@@ -67,6 +69,7 @@ Vercel will automatically trigger a build. Monitor it in the Vercel dashboard.
 After first deployment, create the default admin user in MongoDB:
 
 ### Using MongoDB Compass:
+
 1. Connect to your MongoDB cluster
 2. Navigate to `apna-ghar` database → `users` collection
 3. Click **Insert Document** and paste:
@@ -85,6 +88,7 @@ After first deployment, create the default admin user in MongoDB:
 ```
 
 ### To Generate bcrypt Hash:
+
 Use this Node.js script locally:
 
 ```javascript
@@ -112,6 +116,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 ```
 
 Expected response:
+
 ```json
 {
   "success": true,
@@ -146,8 +151,8 @@ db.properties.insertOne({
   views: 0,
   createdBy: ObjectId("YOUR_ADMIN_USER_ID"),
   createdAt: new Date(),
-  updatedAt: new Date()
-})
+  updatedAt: new Date(),
+});
 ```
 
 ---
@@ -155,21 +160,25 @@ db.properties.insertOne({
 ## Troubleshooting
 
 ### 404 on Vercel
+
 - Verify `vercel.json` was committed
 - Check that **Output Directory** in Vercel Dashboard is `dist/client`
 - Run `npm run build` locally and verify `dist/client/index.html` exists
 
 ### Login fails
+
 - Check `MONGODB_URI` is correct and network access is enabled
 - Verify the admin user exists in the `users` collection
 - Check that password hash was generated correctly
 
 ### Auth cookie not being set
+
 - Ensure requests include `credentials: "include"` in fetch
 - Verify `NODE_ENV=production` in Vercel environment
 - Check browser DevTools → Application → Cookies for `authToken`
 
 ### Properties API returns empty
+
 - Verify at least one property was inserted in MongoDB
 - Check that `createdBy` references a valid User ID
 - Ensure `MONGODB_URI` is working
@@ -185,7 +194,7 @@ import { useAuth } from "@/contexts/auth-context";
 
 export function AdminLogin() {
   const { login } = useAuth();
-  
+
   const handleSubmit = async (e) => {
     try {
       await login(email, password);

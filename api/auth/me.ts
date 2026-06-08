@@ -3,9 +3,7 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 
 // MongoDB URI
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  "mongodb://localhost:27017/apna-ghar";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/apna-ghar";
 
 // User Schema
 const userSchema = new mongoose.Schema(
@@ -18,56 +16,44 @@ const userSchema = new mongoose.Schema(
     lastLogin: Date,
     phone: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Get or create User model
-let User =
-  mongoose.models.User ||
-  mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 const verifyToken = (token) => {
   try {
-    return jwt.verify(
-      token,
-      process.env.JWT_SECRET ||
-        "your-secret-key-change-this"
-    );
+    return jwt.verify(token, process.env.JWT_SECRET || "your-secret-key-change-this");
   } catch (error) {
     return null;
   }
 };
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Helper function to set CORS headers with credentials support
   const setCorsHeaders = (req: VercelRequest, res: VercelResponse) => {
     const origin = req.headers.origin;
-    const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim());
-    
+    const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((o) => o.trim());
+
     if (origin && allowedOrigins.includes(origin)) {
       res.setHeader("Access-Control-Allow-Origin", origin);
       res.setHeader("Access-Control-Allow-Credentials", "true");
     } else if (allowedOrigins.includes("*")) {
       res.setHeader("Access-Control-Allow-Origin", "*");
     }
-    
+
     res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   };
 
   // Set CORS headers
   setCorsHeaders(req, res);
-  
+
   if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type, Authorization"
-  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
@@ -82,9 +68,7 @@ export default async function handler(
 
   try {
     // Get token from cookie or Authorization header
-    let token =
-      req.cookies?.authToken ||
-      req.headers.authorization?.split(" ")[1];
+    const token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({
@@ -103,16 +87,12 @@ export default async function handler(
     }
 
     // Connect to MongoDB
-    if (
-      mongoose.connection.readyState === 0
-    ) {
+    if (mongoose.connection.readyState === 0) {
       await mongoose.connect(MONGODB_URI);
     }
 
     // Get user
-    const user = await User.findById(
-      decoded.userId
-    );
+    const user = await User.findById(decoded.userId);
 
     if (!user) {
       return res.status(404).json({

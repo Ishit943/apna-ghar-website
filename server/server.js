@@ -11,9 +11,7 @@ import authRoutes from "./routes/authRoutes.js";
 import propertyRoutes from "./routes/propertyRoutes.js";
 
 // Get current directory (ESM)
-const __dirname = path.dirname(
-  fileURLToPath(import.meta.url)
-);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Load .env from server folder
 dotenv.config({
@@ -29,10 +27,18 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:8080', 'http://localhost:8081', 'http://127.0.0.1:8081', 'http://127.0.0.1:5173'],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:8080",
+      "http://localhost:8081",
+      "http://127.0.0.1:8081",
+      "http://127.0.0.1:5173",
+    ],
+    credentials: true,
+  }),
+);
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -43,8 +49,7 @@ app.use("/api/contact", contactRoutes);
 app.get("/", (req, res) => {
   res.json({
     success: true,
-    message:
-      "Backend server is running successfully",
+    message: "Backend server is running successfully",
   });
 });
 
@@ -52,11 +57,9 @@ app.get("/", (req, res) => {
 connectDB();
 
 // For local development (not in serverless), start the server
-if (!process.env.VERCEL && process.env.NODE_ENV !== 'production') {
+if (!process.env.VERCEL && process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
-    console.log(
-      `Server running on port ${PORT}`
-    );
+    console.log(`Server running on port ${PORT}`);
   });
 }
 

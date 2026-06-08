@@ -3,9 +3,7 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 
-const MONGODB_URI =
-  process.env.MONGODB_URI ||
-  "mongodb://localhost:27017/apna-ghar";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/apna-ghar";
 
 // User Schema
 const userSchema = new mongoose.Schema(
@@ -18,25 +16,23 @@ const userSchema = new mongoose.Schema(
     lastLogin: Date,
     phone: String,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-const User =
-  mongoose.models.User ||
-  mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 // Helper function to set CORS headers
 const setCorsHeaders = (req: VercelRequest, res: VercelResponse) => {
   const origin = req.headers.origin;
-  const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map(o => o.trim());
-  
+  const allowedOrigins = (process.env.ALLOWED_ORIGINS || "").split(",").map((o) => o.trim());
+
   if (origin && allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Credentials", "true");
   } else if (allowedOrigins.includes("*")) {
     res.setHeader("Access-Control-Allow-Origin", "*");
   }
-  
+
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 };
@@ -44,20 +40,13 @@ const setCorsHeaders = (req: VercelRequest, res: VercelResponse) => {
 // Helper function to verify JWT token
 const verifyToken = (token: string) => {
   try {
-    return jwt.verify(
-      token,
-      process.env.JWT_SECRET ||
-        "your-secret-key-change-this"
-    );
+    return jwt.verify(token, process.env.JWT_SECRET || "your-secret-key-change-this");
   } catch (error) {
     return null;
   }
 };
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   setCorsHeaders(req, res);
 
@@ -74,16 +63,12 @@ export default async function handler(
 
   try {
     // Connect to MongoDB
-    if (
-      mongoose.connection.readyState === 0
-    ) {
+    if (mongoose.connection.readyState === 0) {
       await mongoose.connect(MONGODB_URI);
     }
 
     // Verify authentication
-    const token =
-      req.cookies?.authToken ||
-      req.headers.authorization?.split(" ")[1];
+    const token = req.cookies?.authToken || req.headers.authorization?.split(" ")[1];
 
     if (!token) {
       return res.status(401).json({
@@ -167,17 +152,18 @@ export default async function handler(
         role: newTeamMember.role,
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const err = error as { code?: number; message?: string };
     console.error("Team member creation error:", error);
-    
+
     // Handle duplicate key error
-    if (error.code === 11000) {
+    if (err.code === 11000) {
       return res.status(409).json({
         success: false,
         message: "Email already in use",
       });
     }
-    
+
     res.status(500).json({
       success: false,
       message: "Server error during team member creation",

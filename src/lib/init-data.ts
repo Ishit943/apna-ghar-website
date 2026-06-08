@@ -1,7 +1,7 @@
 // Initialize demo users and data if not already present
 export function initializeDemoData() {
   const existingUsers = localStorage.getItem("users");
-  
+
   if (!existingUsers) {
     const demoUsers = [
       {
@@ -21,7 +21,7 @@ export function initializeDemoData() {
         joinedDate: new Date().toISOString().split("T")[0],
       },
     ];
-    
+
     localStorage.setItem("users", JSON.stringify(demoUsers));
   }
 }

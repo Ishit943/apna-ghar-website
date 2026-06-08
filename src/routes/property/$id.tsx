@@ -1,5 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft, MapPin, Maximize2, Bed, Bath, Phone, MessageSquare, Heart, Share2 } from "lucide-react";
+import {
+  ArrowLeft,
+  MapPin,
+  Maximize2,
+  Bed,
+  Bath,
+  Phone,
+  MessageSquare,
+  Heart,
+  Share2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -9,7 +19,7 @@ export const Route = createFileRoute("/property/$id")({
   head: ({ params }) => {
     const propertyId = parseInt(params.id, 10);
     const property = PROPERTIES_DETAILS[propertyId];
-    
+
     return {
       meta: [
         { title: `${property?.title || "Property Details"} | Apna Ghar Consultants` },
@@ -27,7 +37,10 @@ export const Route = createFileRoute("/property/$id")({
           content: property?.description || "Luxury property details",
         },
         { property: "og:type", content: "website" },
-        { property: "og:image", content: property?.image || "https://picsum.photos/1200/630?random=6" },
+        {
+          property: "og:image",
+          content: property?.image || "https://picsum.photos/1200/630?random=6",
+        },
         { name: "twitter:card", content: "summary_large_image" },
       ],
     };
@@ -92,11 +105,19 @@ const PROPERTIES_DETAILS: Record<number, PropertyDetails> = {
     type: "Residential Plot",
     price: "₹28,00,000",
     image: "https://picsum.photos/800/500?random=101",
-    description: "Spacious corner plot in prime residential zone with all utilities and excellent appreciation potential.",
+    description:
+      "Spacious corner plot in prime residential zone with all utilities and excellent appreciation potential.",
     sqft: "2,500 sq.ft",
     fullDescription:
       "This premium corner plot in Malviya Nagar offers an exceptional investment opportunity in Jaipur's most sought-after residential zone. Located in a well-planned community with modern infrastructure, the plot benefits from excellent connectivity, proximity to schools, hospitals, and shopping centers. The wide roads and tree-lined avenues provide a serene residential environment perfect for building your dream home.",
-    amenities: ["24/7 Security", "Well-paved roads", "Underground drainage", "Street lighting", "Green spaces", "Community center"],
+    amenities: [
+      "24/7 Security",
+      "Well-paved roads",
+      "Underground drainage",
+      "Street lighting",
+      "Green spaces",
+      "Community center",
+    ],
     highlights: [
       "Corner plot with maximum natural light",
       "Close to schools and hospitals",
@@ -119,7 +140,8 @@ const PROPERTIES_DETAILS: Record<number, PropertyDetails> = {
     type: "Villa",
     price: "₹75,00,000",
     image: "https://picsum.photos/800/500?random=102",
-    description: "Stunning 4-bedroom villa featuring private garden, modern interiors, and premium finishes in prestigious community.",
+    description:
+      "Stunning 4-bedroom villa featuring private garden, modern interiors, and premium finishes in prestigious community.",
     sqft: "4,500 sq.ft",
     beds: 4,
     baths: 3,
@@ -156,11 +178,19 @@ const PROPERTIES_DETAILS: Record<number, PropertyDetails> = {
     type: "Farmhouse",
     price: "₹45,00,000",
     image: "https://picsum.photos/800/500?random=103",
-    description: "Sprawling farmhouse with expansive land, organic cultivation space, and weekend retreat potential near city outskirts.",
+    description:
+      "Sprawling farmhouse with expansive land, organic cultivation space, and weekend retreat potential near city outskirts.",
     sqft: "3,000 sq.ft + 5 acres",
     fullDescription:
       "Escape to this magnificent farmhouse in Jagatpura, perfect for those seeking a blend of urban convenience and rural tranquility. Set on 5 sprawling acres, this property offers ample space for organic farming, landscaping, and agricultural pursuits. The main residential structure features comfortable rooms, modern amenities, and is designed to provide a peaceful retreat from city life while remaining accessible to Jaipur.",
-    amenities: ["Agricultural land", "Borewell facility", "Farm house structure", "Guest cottage potential", "Ample storage", "Organic cultivation space"],
+    amenities: [
+      "Agricultural land",
+      "Borewell facility",
+      "Farm house structure",
+      "Guest cottage potential",
+      "Ample storage",
+      "Organic cultivation space",
+    ],
     highlights: [
       "5 acres of prime agricultural land",
       "Perfect for farming enthusiasts",
@@ -183,13 +213,22 @@ const PROPERTIES_DETAILS: Record<number, PropertyDetails> = {
     type: "Apartment",
     price: "₹65,00,000",
     image: "https://picsum.photos/800/500?random=104",
-    description: "Luxurious 3-bedroom apartment in premium residential area with modern kitchen, spacious balcony, and excellent amenities.",
+    description:
+      "Luxurious 3-bedroom apartment in premium residential area with modern kitchen, spacious balcony, and excellent amenities.",
     sqft: "2,200 sq.ft",
     beds: 3,
     baths: 2,
     fullDescription:
       "This elegant 3-bedroom apartment in C-Scheme combines luxury with practicality. Located in one of Jaipur's most prestigious residential zones, the apartment features premium finishes, expansive living areas, and a modern modular kitchen. The generous balcony offers stunning views, while the open floor plan creates an airy, sophisticated living environment perfect for families.",
-    amenities: ["Modular kitchen", "Spacious balcony", "Premium flooring", "Ample parking", "Lift facility", "Community hall", "Security"],
+    amenities: [
+      "Modular kitchen",
+      "Spacious balcony",
+      "Premium flooring",
+      "Ample parking",
+      "Lift facility",
+      "Community hall",
+      "Security",
+    ],
     highlights: [
       "3 well-proportioned bedrooms",
       "2 modern bathrooms",
@@ -212,11 +251,20 @@ const PROPERTIES_DETAILS: Record<number, PropertyDetails> = {
     type: "Commercial",
     price: "₹2,50,00,000",
     image: "https://picsum.photos/800/500?random=105",
-    description: "Prime commercial space in business hub with high visibility, modern infrastructure, and strong rental returns.",
+    description:
+      "Prime commercial space in business hub with high visibility, modern infrastructure, and strong rental returns.",
     sqft: "8,000 sq.ft",
     fullDescription:
       "This premium commercial office space in Talwandi is ideally situated in Kota's primary business district. The modern building features high ceilings, open floor plans, and flexible layouts suitable for various business operations. With excellent foot traffic, nearby dining options, and convenient parking, this space is perfect for corporate offices, IT companies, and professional services.",
-    amenities: ["High visibility location", "Flexible floor plans", "Ample parking", "Backup power", "24/7 security", "Loading area", "Cafeteria facility"],
+    amenities: [
+      "High visibility location",
+      "Flexible floor plans",
+      "Ample parking",
+      "Backup power",
+      "24/7 security",
+      "Loading area",
+      "Cafeteria facility",
+    ],
     highlights: [
       "8,000 sq.ft of prime office space",
       "High foot traffic area",
@@ -239,11 +287,20 @@ const PROPERTIES_DETAILS: Record<number, PropertyDetails> = {
     type: "Residential Plot",
     price: "₹32,00,000",
     image: "https://picsum.photos/800/500?random=106",
-    description: "Exclusive gated community plot with landscaped surroundings, 24/7 security, and community amenities.",
+    description:
+      "Exclusive gated community plot with landscaped surroundings, 24/7 security, and community amenities.",
     sqft: "3,200 sq.ft",
     fullDescription:
       "This premium plot in Kunhadi's exclusive gated villa community offers the perfect foundation for your dream home. Part of a planned residential development, this property benefits from a secure gated environment, landscaped common areas, and a strong community of discerning residents. The modern infrastructure ensures long-term value appreciation and an excellent quality of life.",
-    amenities: ["Gated community", "24/7 security", "Landscaped parks", "Community center", "Wide roads", "Underground utilities", "Guest parking"],
+    amenities: [
+      "Gated community",
+      "24/7 security",
+      "Landscaped parks",
+      "Community center",
+      "Wide roads",
+      "Underground utilities",
+      "Guest parking",
+    ],
     highlights: [
       "3,200 sq.ft premium plot",
       "Gated and secure community",
@@ -266,7 +323,8 @@ const PROPERTIES_DETAILS: Record<number, PropertyDetails> = {
     type: "Villa",
     price: "₹1,20,00,000",
     image: "https://picsum.photos/800/500?random=107",
-    description: "Elegant 4-bedroom villa with private courtyard, terraced gardens, and premium modern architecture ideal for discerning investors.",
+    description:
+      "Elegant 4-bedroom villa with private courtyard, terraced gardens, and premium modern architecture ideal for discerning investors.",
     sqft: "3,500 sq.ft",
     beds: 4,
     baths: 4,
@@ -303,7 +361,8 @@ const PROPERTIES_DETAILS: Record<number, PropertyDetails> = {
     type: "Villa",
     price: "₹85,00,000",
     image: "https://picsum.photos/800/500?random=108",
-    description: "Beautiful 5-bedroom heritage-style bungalow with traditional architecture, spacious grounds, and strong investment potential.",
+    description:
+      "Beautiful 5-bedroom heritage-style bungalow with traditional architecture, spacious grounds, and strong investment potential.",
     sqft: "5,200 sq.ft",
     beds: 5,
     baths: 4,
@@ -354,7 +413,9 @@ function PropertyGallery({ property }: { property: PropertyDetails }) {
         <button
           onClick={() => setSelectedImage(property.image)}
           className={`flex-shrink-0 w-20 h-20 rounded overflow-hidden border-2 transition-all ${
-            selectedImage === property.image ? "border-accent" : "border-border hover:border-accent/50"
+            selectedImage === property.image
+              ? "border-accent"
+              : "border-border hover:border-accent/50"
           }`}
         >
           <img src={property.image} alt="Main" className="w-full h-full object-cover" />
@@ -385,7 +446,9 @@ function PropertyDetailPage() {
         <Header />
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
-            <h1 className="text-2xl font-serif font-bold text-foreground mb-2">Property Not Found</h1>
+            <h1 className="text-2xl font-serif font-bold text-foreground mb-2">
+              Property Not Found
+            </h1>
             <p className="text-muted-foreground mb-6">This property is no longer available.</p>
             <a href="/properties" className="text-accent hover:underline">
               Back to Properties
@@ -453,7 +516,9 @@ function PropertyDetailPage() {
               {/* Full Description */}
               <div className="mb-12">
                 <h2 className="text-2xl font-serif font-bold text-foreground mb-4">Overview</h2>
-                <p className="text-base text-foreground/80 leading-relaxed">{property.fullDescription}</p>
+                <p className="text-base text-foreground/80 leading-relaxed">
+                  {property.fullDescription}
+                </p>
               </div>
             </div>
 
@@ -466,18 +531,32 @@ function PropertyDetailPage() {
                 </div>
 
                 <div className="space-y-3 mb-8">
-                  <Button size="lg" className="w-full bg-accent hover:bg-accent/90" onClick={handleContactAgent}>
+                  <Button
+                    size="lg"
+                    className="w-full bg-accent hover:bg-accent/90"
+                    onClick={handleContactAgent}
+                  >
                     <Phone className="h-5 w-5 mr-2" />
                     Contact Agent
                   </Button>
-                  <Button size="lg" variant="outline" className="w-full border-gold/50 hover:bg-gold/10" onClick={handleWhatsApp}>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full border-gold/50 hover:bg-gold/10"
+                    onClick={handleWhatsApp}
+                  >
                     <MessageSquare className="h-5 w-5 mr-2" />
                     WhatsApp Inquiry
                   </Button>
                 </div>
 
                 <div className="flex gap-2 pt-6 border-t border-border">
-                  <Button variant="ghost" size="sm" className="flex-1" onClick={() => toast.success("Saved to favorites!")}>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-1"
+                    onClick={() => toast.success("Saved to favorites!")}
+                  >
                     <Heart className="h-4 w-4" />
                   </Button>
                   <Button
@@ -485,8 +564,14 @@ function PropertyDetailPage() {
                     size="sm"
                     className="flex-1"
                     onClick={() => {
-                      navigator.share?.({ title: property.title, text: `Check out this property: ${property.title}` }) ||
+                      if (navigator.share) {
+                        navigator.share({
+                          title: property.title,
+                          text: `Check out this property: ${property.title}`,
+                        });
+                      } else {
                         toast.success("Link copied!");
+                      }
                     }}
                   >
                     <Share2 className="h-4 w-4" />
@@ -513,7 +598,9 @@ function PropertyDetailPage() {
 
             {/* Highlights */}
             <div>
-              <h3 className="text-2xl font-serif font-bold text-foreground mb-6">Why This Property</h3>
+              <h3 className="text-2xl font-serif font-bold text-foreground mb-6">
+                Why This Property
+              </h3>
               <div className="space-y-3">
                 {property.highlights.map((highlight, idx) => (
                   <div key={idx} className="flex items-start gap-3">
@@ -527,16 +614,28 @@ function PropertyDetailPage() {
 
           {/* CTA Section */}
           <div className="bg-gradient-to-r from-primary/10 to-accent/10 border border-border rounded-lg p-8 sm:p-12 text-center">
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mb-3">Ready to Schedule a Site Visit?</h3>
+            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-foreground mb-3">
+              Ready to Schedule a Site Visit?
+            </h3>
             <p className="text-foreground/70 mb-8 max-w-2xl mx-auto">
-              Our expert team can arrange a convenient time for you to visit this property and explore it in detail.
+              Our expert team can arrange a convenient time for you to visit this property and
+              explore it in detail.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-accent hover:bg-accent/90" onClick={handleContactAgent}>
+              <Button
+                size="lg"
+                className="bg-accent hover:bg-accent/90"
+                onClick={handleContactAgent}
+              >
                 <Phone className="h-5 w-5 mr-2" />
                 Call Now
               </Button>
-              <Button size="lg" variant="outline" className="border-gold/50 hover:bg-gold/10" onClick={handleWhatsApp}>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-gold/50 hover:bg-gold/10"
+                onClick={handleWhatsApp}
+              >
                 <MessageSquare className="h-5 w-5 mr-2" />
                 WhatsApp Us
               </Button>
@@ -559,7 +658,9 @@ function PropertyDetailPage() {
                   <div className="text-xs tracking-[0.15em] text-muted-foreground">CONSULTANTS</div>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">Your trusted partner for luxury real estate in Kota & Jaipur.</p>
+              <p className="text-sm text-muted-foreground">
+                Your trusted partner for luxury real estate in Kota & Jaipur.
+              </p>
             </div>
             <div>
               <h4 className="font-semibold text-foreground mb-3">Quick Links</h4>

@@ -12,31 +12,21 @@ const contactSchema = new mongoose.Schema(
       required: [true, "Email is required"],
       trim: true,
       lowercase: true,
-      match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        "Please provide a valid email",
-      ],
+      match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, "Please provide a valid email"],
     },
     phone: {
       type: String,
-      required: [
-        true,
-        "10-digit phone number is required",
-      ],
+      required: [true, "10-digit phone number is required"],
       validate: {
         validator: function (v) {
           return /^[6-9]\d{9}$/.test(v);
         },
-        message:
-          "Phone must be exactly 10 digits starting with 6-9",
+        message: "Phone must be exactly 10 digits starting with 6-9",
       },
     },
     message: {
       type: String,
-      required: [
-        true,
-        "Message is required",
-      ],
+      required: [true, "Message is required"],
       trim: true,
       maxlength: [1000, "Message cannot exceed 1000 characters"],
     },
@@ -66,7 +56,7 @@ const contactSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 // Create text index for search
@@ -74,9 +64,6 @@ contactSchema.index({ name: "text", message: "text" });
 // Index for filtering by status and date
 contactSchema.index({ status: 1, createdAt: -1 });
 
-const Contact = mongoose.model(
-  "Contact",
-  contactSchema
-);
+const Contact = mongoose.model("Contact", contactSchema);
 
 export default Contact;
